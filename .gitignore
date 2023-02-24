@@ -1,67 +1,31 @@
-VHDL for MAX V/db/VM1085_VHDL.(0).cnf.cdb
-VHDL for MAX V/db/VM1085_VHDL.(0).cnf.hdb
-VHDL for MAX V/db/VM1085_VHDL.(1).cnf.cdb
-VHDL for MAX V/db/VM1085_VHDL.(1).cnf.hdb
-VHDL for MAX V/db/VM1085_VHDL.asm.qmsg
-VHDL for MAX V/db/VM1085_VHDL.asm.rdb
-VHDL for MAX V/db/VM1085_VHDL.asm_labs.ddb
-VHDL for MAX V/db/VM1085_VHDL.cbx.xml
-VHDL for MAX V/db/VM1085_VHDL.cmp.cdb
-VHDL for MAX V/db/VM1085_VHDL.cmp.hdb
-VHDL for MAX V/db/VM1085_VHDL.cmp.idb
-VHDL for MAX V/db/VM1085_VHDL.cmp.logdb
-VHDL for MAX V/db/VM1085_VHDL.cmp.rdb
-VHDL for MAX V/db/VM1085_VHDL.cmp0.ddb
-VHDL for MAX V/db/VM1085_VHDL.db_info
-VHDL for MAX V/db/VM1085_VHDL.eda.qmsg
-VHDL for MAX V/db/VM1085_VHDL.fit.qmsg
-VHDL for MAX V/db/VM1085_VHDL.hier_info
-VHDL for MAX V/db/VM1085_VHDL.hif
-VHDL for MAX V/db/VM1085_VHDL.lpc.html
-VHDL for MAX V/db/VM1085_VHDL.lpc.rdb
-VHDL for MAX V/db/VM1085_VHDL.lpc.txt
-VHDL for MAX V/db/VM1085_VHDL.map.cdb
-VHDL for MAX V/db/VM1085_VHDL.map.hdb
-VHDL for MAX V/db/VM1085_VHDL.map.logdb
-VHDL for MAX V/db/VM1085_VHDL.map.qmsg
-VHDL for MAX V/db/VM1085_VHDL.map.rdb
-VHDL for MAX V/db/VM1085_VHDL.npp.qmsg
-VHDL for MAX V/db/VM1085_VHDL.pre_map.hdb
-VHDL for MAX V/db/VM1085_VHDL.quiproj.12096.rdr.flock
-VHDL for MAX V/db/VM1085_VHDL.root_partition.map.reg_db.cdb
-VHDL for MAX V/db/VM1085_VHDL.routing.rdb
-VHDL for MAX V/db/VM1085_VHDL.rtlv.hdb
-VHDL for MAX V/db/VM1085_VHDL.rtlv_sg.cdb
-VHDL for MAX V/db/VM1085_VHDL.rtlv_sg_swap.cdb
-VHDL for MAX V/db/VM1085_VHDL.sgate.nvd
-VHDL for MAX V/db/VM1085_VHDL.sgate_sm.nvd
-VHDL for MAX V/db/VM1085_VHDL.sld_design_entry.sci
-VHDL for MAX V/db/VM1085_VHDL.sld_design_entry_dsc.sci
-VHDL for MAX V/db/VM1085_VHDL.smart_action.txt
-VHDL for MAX V/db/VM1085_VHDL.sta.qmsg
-VHDL for MAX V/db/VM1085_VHDL.sta.rdb
-VHDL for MAX V/db/VM1085_VHDL.sta_cmp.5_slow.tdb
-VHDL for MAX V/db/VM1085_VHDL.tis_db_list.ddb
-VHDL for MAX V/db/VM1085_VHDL.tmw_info
-VHDL for MAX V/db/VM1085_VHDL.vpr.ammdb
-VHDL for MAX V/incremental_db/README
-VHDL for MAX V/incremental_db/compiled_partitions/VM1085_VHDL.db_info
-VHDL for MAX V/incremental_db/compiled_partitions/VM1085_VHDL.root_partition.map.kpt
-VHDL for MAX V/output_files/VM1085_VHDL.asm.rpt
-VHDL for MAX V/output_files/VM1085_VHDL.done
-VHDL for MAX V/output_files/VM1085_VHDL.eda.rpt
-VHDL for MAX V/output_files/VM1085_VHDL.fit.rpt
-VHDL for MAX V/output_files/VM1085_VHDL.fit.smsg
-VHDL for MAX V/output_files/VM1085_VHDL.fit.summary
-VHDL for MAX V/output_files/VM1085_VHDL.flow.rpt
-VHDL for MAX V/output_files/VM1085_VHDL.jdi
-VHDL for MAX V/output_files/VM1085_VHDL.map.rpt
-VHDL for MAX V/output_files/VM1085_VHDL.map.summary
-VHDL for MAX V/output_files/VM1085_VHDL.pin
-VHDL for MAX V/output_files/VM1085_VHDL.pof
-VHDL for MAX V/output_files/VM1085_VHDL.sld
-VHDL for MAX V/output_files/VM1085_VHDL.sta.rpt
-VHDL for MAX V/output_files/VM1085_VHDL.sta.summary
-VHDL for MAX V/simulation/modelsim/VM1085_VHDL.sft
-VHDL for MAX V/simulation/modelsim/VM1085_VHDL.vo
-VHDL for MAX V/simulation/modelsim/VM1085_VHDL_modelsim.xrf
+*.qmsg
+*.cdb
+*.hdb
+*.rdb
+*.ddb
+*.xml
+*.idb
+*.logdb
+*.db_info
+*.hier_info
+*.hif
+*.html
+*.txt
+*.flock
+*.nvd
+*.sci
+*.tdb
+*.tmw_info
+*.ammdb
+*.kpt
+*.rpt
+*.done
+*.smsg
+*.summary
+*.jdi
+*.pin
+*.pof
+*.sld
+*.sft
+*.vo
+*.xrf
