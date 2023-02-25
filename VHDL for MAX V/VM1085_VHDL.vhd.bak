@@ -17,5 +17,11 @@ signal RW,CLK:std_logic;
 
 begin
 
+testreg:entity work.bit8_register port map(
+	data_out=>data_out,
+	data_in=>data_in,
+	RW=>RW,
+	CLK=>CLK
+);
 
 end behavioral;

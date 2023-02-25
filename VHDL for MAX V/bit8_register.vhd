@@ -3,9 +3,9 @@ use ieee.std_logic_1164.all;
 
 entity bit8_register is
 port(
-data_out:out std_logic_vector(7 downto 0);
+data_out,data_out_bus:out std_logic_vector(7 downto 0);
 data_in:in std_logic_vector(7 downto 0);
-RW,CLK:in std_logic
+RW,CLK,CE:in std_logic
 );
 end entity;
 
@@ -14,8 +14,8 @@ signal data:std_logic_vector(7 downto 0):=(others=>'0');
 begin
 data_out<=data;
 process(CLK) begin
-	if(falling_edge(CLK)) then
-		if RW='0' then
+	if(falling_edge(CLK) and CE='1') then
+		if RW='1' then
 			data<=data_in;
 		end if;
 		
