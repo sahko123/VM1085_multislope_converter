@@ -1,0 +1,10 @@
+	component spi_bus is
+		port (
+			ncs : in  std_logic := 'X'; -- ncs
+			osc : out std_logic;        -- osc
+			sck : in  std_logic := 'X'; -- sck
+			si  : in  std_logic := 'X'; -- si
+			so  : out std_logic         -- so
+		);
+	end component spi_bus;
+

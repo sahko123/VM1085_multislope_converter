@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<system name="$${FILENAME}">
+ <component
+   name="$${FILENAME}"
+   displayName="$${FILENAME}"
+   version="1.0"
+   description=""
+   tags="INTERNAL_COMPONENT=true"
+   categories="" />
+ <parameter name="bonusData"><![CDATA[bonusData 
+{
+   element ufm_spi_0
+   {
+      datum _sortIndex
+      {
+         value = "0";
+         type = "int";
+      }
+   }
+}
+]]></parameter>
+ <parameter name="clockCrossingAdapter" value="HANDSHAKE" />
+ <parameter name="device" value="5M570ZF256C5" />
+ <parameter name="deviceFamily" value="MAX V" />
+ <parameter name="deviceSpeedGrade" value="5" />
+ <parameter name="fabricMode" value="QSYS" />
+ <parameter name="generateLegacySim" value="false" />
+ <parameter name="generationId" value="0" />
+ <parameter name="globalResetBus" value="false" />
+ <parameter name="hdlLanguage" value="VERILOG" />
+ <parameter name="hideFromIPCatalog" value="true" />
+ <parameter name="lockedInterfaceDefinition" value="" />
+ <parameter name="maxAdditionalLatency" value="1" />
+ <parameter name="projectName" value="" />
+ <parameter name="sopcBorderPoints" value="false" />
+ <parameter name="systemHash" value="0" />
+ <parameter name="testBenchDutName" value="" />
+ <parameter name="timeStamp" value="0" />
+ <parameter name="useTestBenchNamingPattern" value="false" />
+ <instanceScript></instanceScript>
+ <interface name="ncs" internal="ufm_spi_0.ncs" type="conduit" dir="end">
+  <port name="ncs" internal="ncs" />
+ </interface>
+ <interface name="osc" internal="ufm_spi_0.osc" type="conduit" dir="end">
+  <port name="osc" internal="osc" />
+ </interface>
+ <interface name="sck" internal="ufm_spi_0.sck" type="conduit" dir="end">
+  <port name="sck" internal="sck" />
+ </interface>
+ <interface name="si" internal="ufm_spi_0.si" type="conduit" dir="end">
+  <port name="si" internal="si" />
+ </interface>
+ <interface name="so" internal="ufm_spi_0.so" type="conduit" dir="end">
+  <port name="so" internal="so" />
+ </interface>
+ <module
+   name="ufm_spi_0"
+   kind="altera_ufm_spi"
+   version="22.1"
+   enabled="1"
+   autoexport="1">
+  <parameter name="ACCESS_MODE" value="READ_WRITE" />
+  <parameter name="BYTE_OF_PAGE_WRITE" value="8" />
+  <parameter name="CBX_AUTO_BLACKBOX" value="ALL" />
+  <parameter name="CONFIG_MODE" value="BASE" />
+  <parameter name="DEVICE_FAMILY" value="MAX V" />
+  <parameter name="GUI_ERASE_TIME" value="500000" />
+  <parameter name="GUI_MEM_INIT">Initialize blank memory</parameter>
+  <parameter name="GUI_OSC_FREQUENCY" value="5.56" />
+  <parameter name="GUI_PROGRAM_TIME" value="1600" />
+  <parameter name="LPM_FILE" value="" />
+  <parameter name="OSCENA_CHECK" value="false" />
+  <parameter name="OSC_CHECK" value="true" />
+  <parameter name="WIDTH_UFM_ADDRESS" value="9" />
+ </module>
+ <interconnectRequirement for="$system" name="qsys_mm.clockCrossingAdapter" value="HANDSHAKE" />
+ <interconnectRequirement for="$system" name="qsys_mm.enableEccProtection" value="FALSE" />
+ <interconnectRequirement for="$system" name="qsys_mm.insertDefaultSlave" value="FALSE" />
+ <interconnectRequirement for="$system" name="qsys_mm.maxAdditionalLatency" value="1" />
+</system>

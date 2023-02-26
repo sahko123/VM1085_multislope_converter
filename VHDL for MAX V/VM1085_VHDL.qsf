@@ -58,8 +58,7 @@ set_global_assignment -name POWER_PRESET_COOLING_SOLUTION "NO HEAT SINK WITH STI
 set_global_assignment -name PROJECT_IP_REGENERATION_POLICY ALWAYS_REGENERATE_IP
 set_global_assignment -name VHDL_INPUT_VERSION VHDL_2008
 set_global_assignment -name VHDL_SHOW_LMF_MAPPING_MESSAGES OFF
-set_global_assignment -name VHDL_FILE unnamed/synthesis/unnamed.vhd
-set_global_assignment -name QIP_FILE unnamed/synthesis/unnamed.qip
+set_global_assignment -name QIP_FILE spi_bus/synthesis/spi_bus.qip
 set_global_assignment -name VHDL_FILE ../bit8_register.vhd
 set_global_assignment -name VHDL_FILE ../VM1085_VHDL.vhd
 set_global_assignment -name VHDL_FILE converter.vhd
