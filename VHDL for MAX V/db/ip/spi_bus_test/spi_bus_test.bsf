@@ -1,0 +1,93 @@
+/*
+WARNING: Do NOT edit the input and output ports in this file in a text
+editor if you plan to continue editing the block that represents it in
+the Block Editor! File corruption is VERY likely to occur.
+*/
+/*
+Copyright (C) 2022  Intel Corporation. All rights reserved.
+Your use of Intel Corporation's design tools, logic functions 
+and other software and tools, and any partner logic 
+functions, and any output files from any of the foregoing 
+(including device programming or simulation files), and any 
+associated documentation or information are expressly subject 
+to the terms and conditions of the Intel Program License 
+Subscription Agreement, the Intel Quartus Prime License Agreement,
+the Intel FPGA IP License Agreement, or other applicable license
+agreement, including, without limitation, that your use is for
+the sole purpose of programming logic devices manufactured by
+Intel and sold by Intel or its authorized distributors.  Please
+refer to the applicable agreement for further details, at
+https://fpgasoftware.intel.com/eula.
+*/
+(header "symbol" (version "1.1"))
+(symbol
+	(rect 0 0 112 184)
+	(text "spi_bus_test" (rect 19 -1 69 11)(font "Arial" (font_size 10)))
+	(text "inst" (rect 8 168 20 180)(font "Arial" ))
+	(port
+		(pt 0 72)
+		(input)
+		(text "ncs" (rect 0 0 14 12)(font "Arial" (font_size 8)))
+		(text "ncs" (rect 4 61 22 72)(font "Arial" (font_size 8)))
+		(line (pt 0 72)(pt 32 72)(line_width 1))
+	)
+	(port
+		(pt 0 112)
+		(input)
+		(text "sck" (rect 0 0 14 12)(font "Arial" (font_size 8)))
+		(text "sck" (rect 4 101 22 112)(font "Arial" (font_size 8)))
+		(line (pt 0 112)(pt 32 112)(line_width 1))
+	)
+	(port
+		(pt 0 152)
+		(input)
+		(text "si" (rect 0 0 5 12)(font "Arial" (font_size 8)))
+		(text "si" (rect 4 141 16 152)(font "Arial" (font_size 8)))
+		(line (pt 0 152)(pt 32 152)(line_width 1))
+	)
+	(port
+		(pt 112 72)
+		(output)
+		(text "osc" (rect 0 0 14 12)(font "Arial" (font_size 8)))
+		(text "osc" (rect 92 61 110 72)(font "Arial" (font_size 8)))
+		(line (pt 112 72)(pt 80 72)(line_width 1))
+	)
+	(port
+		(pt 112 112)
+		(output)
+		(text "so" (rect 0 0 9 12)(font "Arial" (font_size 8)))
+		(text "so" (rect 98 101 110 112)(font "Arial" (font_size 8)))
+		(line (pt 112 112)(pt 80 112)(line_width 1))
+	)
+	(drawing
+		(text "ncs" (rect 13 43 44 99)(font "Arial" (color 128 0 0)(font_size 9)))
+		(text "ncs" (rect 37 67 92 144)(font "Arial" (color 0 0 0)))
+		(text "osc" (rect 81 43 180 99)(font "Arial" (color 128 0 0)(font_size 9)))
+		(text "osc" (rect 62 67 142 144)(font "Arial" (color 0 0 0)))
+		(text "sck" (rect 13 83 44 179)(font "Arial" (color 128 0 0)(font_size 9)))
+		(text "sck" (rect 37 107 92 224)(font "Arial" (color 0 0 0)))
+		(text "si" (rect 23 123 58 259)(font "Arial" (color 128 0 0)(font_size 9)))
+		(text "si" (rect 37 147 86 304)(font "Arial" (color 0 0 0)))
+		(text "so" (rect 81 83 174 179)(font "Arial" (color 128 0 0)(font_size 9)))
+		(text "so" (rect 67 107 146 224)(font "Arial" (color 0 0 0)))
+		(text " spi_bus_test " (rect 54 168 192 346)(font "Arial" ))
+		(line (pt 32 32)(pt 80 32)(line_width 1))
+		(line (pt 80 32)(pt 80 168)(line_width 1))
+		(line (pt 32 168)(pt 80 168)(line_width 1))
+		(line (pt 32 32)(pt 32 168)(line_width 1))
+		(line (pt 33 52)(pt 33 76)(line_width 1))
+		(line (pt 34 52)(pt 34 76)(line_width 1))
+		(line (pt 79 52)(pt 79 76)(line_width 1))
+		(line (pt 78 52)(pt 78 76)(line_width 1))
+		(line (pt 33 92)(pt 33 116)(line_width 1))
+		(line (pt 34 92)(pt 34 116)(line_width 1))
+		(line (pt 33 132)(pt 33 156)(line_width 1))
+		(line (pt 34 132)(pt 34 156)(line_width 1))
+		(line (pt 79 92)(pt 79 116)(line_width 1))
+		(line (pt 78 92)(pt 78 116)(line_width 1))
+		(line (pt 0 0)(pt 112 0)(line_width 1))
+		(line (pt 112 0)(pt 112 184)(line_width 1))
+		(line (pt 0 184)(pt 112 184)(line_width 1))
+		(line (pt 0 0)(pt 0 184)(line_width 1))
+	)
+)

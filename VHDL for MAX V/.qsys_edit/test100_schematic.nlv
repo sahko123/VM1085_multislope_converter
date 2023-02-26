@@ -1,0 +1,11 @@
+# # File gsaved with Nlview version 6.3.8  2013-12-19 bk=1.2992 VDI=34 GEI=35
+# 
+preplace inst test100.ufm_spi_0 -pg 1 -lvl 1 -y 30
+preplace inst test100 -pg 1 -lvl 1 -y 40 -regy -20
+preplace netloc EXPORT<net_container>test100</net_container>(SLAVE)test100.ufm_spi_0_osc,(SLAVE)ufm_spi_0.osc) 1 0 1 NJ
+preplace netloc EXPORT<net_container>test100</net_container>(SLAVE)ufm_spi_0.sck,(SLAVE)test100.ufm_spi_0_sck) 1 0 1 NJ
+preplace netloc EXPORT<net_container>test100</net_container>(SLAVE)ufm_spi_0.so,(SLAVE)test100.ufm_spi_0_so) 1 0 1 NJ
+preplace netloc EXPORT<net_container>test100</net_container>(SLAVE)ufm_spi_0.si,(SLAVE)test100.ufm_spi_0_si) 1 0 1 NJ
+preplace netloc EXPORT<net_container>test100</net_container>(SLAVE)test100.ufm_spi_0_ncs,(SLAVE)ufm_spi_0.ncs) 1 0 1 NJ
+levelinfo -pg 1 0 90 230
+levelinfo -hier test100 100 130 220
