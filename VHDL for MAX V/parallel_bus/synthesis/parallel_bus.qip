@@ -1,0 +1,50 @@
+set_global_assignment -entity "parallel_bus" -library "parallel_bus" -name IP_TOOL_NAME "Qsys"
+set_global_assignment -entity "parallel_bus" -library "parallel_bus" -name IP_TOOL_VERSION "22.1"
+set_global_assignment -entity "parallel_bus" -library "parallel_bus" -name IP_TOOL_ENV "Qsys"
+set_global_assignment -library "parallel_bus" -name SOPCINFO_FILE [file join $::quartus(qip_path) "../../parallel_bus.sopcinfo"]
+set_global_assignment -entity "parallel_bus" -library "parallel_bus" -name SLD_INFO "QSYS_NAME parallel_bus HAS_SOPCINFO 1 GENERATION_ID 1677378570"
+set_global_assignment -library "parallel_bus" -name MISC_FILE [file join $::quartus(qip_path) "../parallel_bus.cmp"]
+set_global_assignment -library "parallel_bus" -name SLD_FILE [file join $::quartus(qip_path) "parallel_bus.debuginfo"]
+set_global_assignment -entity "parallel_bus" -library "parallel_bus" -name IP_TARGETED_DEVICE_FAMILY "MAX V"
+set_global_assignment -entity "parallel_bus" -library "parallel_bus" -name IP_GENERATED_DEVICE_FAMILY "{MAX V}"
+set_global_assignment -entity "parallel_bus" -library "parallel_bus" -name IP_QSYS_MODE "STANDALONE"
+set_global_assignment -name SYNTHESIS_ONLY_QIP ON
+set_global_assignment -library "parallel_bus" -name MISC_FILE [file join $::quartus(qip_path) "../../parallel_bus.qsys"]
+set_global_assignment -entity "parallel_bus" -library "parallel_bus" -name IP_COMPONENT_NAME "cGFyYWxsZWxfYnVz"
+set_global_assignment -entity "parallel_bus" -library "parallel_bus" -name IP_COMPONENT_DISPLAY_NAME "cGFyYWxsZWxfYnVz"
+set_global_assignment -entity "parallel_bus" -library "parallel_bus" -name IP_COMPONENT_REPORT_HIERARCHY "On"
+set_global_assignment -entity "parallel_bus" -library "parallel_bus" -name IP_COMPONENT_INTERNAL "Off"
+set_global_assignment -entity "parallel_bus" -library "parallel_bus" -name IP_COMPONENT_VERSION "MS4w"
+set_global_assignment -entity "parallel_bus" -library "parallel_bus" -name IP_COMPONENT_PARAMETER "QVVUT19HRU5FUkFUSU9OX0lE::MTY3NzM3ODU3MA==::QXV0byBHRU5FUkFUSU9OX0lE"
+set_global_assignment -entity "parallel_bus" -library "parallel_bus" -name IP_COMPONENT_PARAMETER "QVVUT19ERVZJQ0VfRkFNSUxZ::TUFYIFY=::QXV0byBERVZJQ0VfRkFNSUxZ"
+set_global_assignment -entity "parallel_bus" -library "parallel_bus" -name IP_COMPONENT_PARAMETER "QVVUT19ERVZJQ0U=::NU01NzBaRjI1NkM1::QXV0byBERVZJQ0U="
+set_global_assignment -entity "parallel_bus" -library "parallel_bus" -name IP_COMPONENT_PARAMETER "QVVUT19ERVZJQ0VfU1BFRURHUkFERQ==::NQ==::QXV0byBERVZJQ0VfU1BFRURHUkFERQ=="
+set_global_assignment -entity "parallel_bus_ufm_parallel_0" -library "parallel_bus" -name IP_COMPONENT_NAME "cGFyYWxsZWxfYnVzX3VmbV9wYXJhbGxlbF8w"
+set_global_assignment -entity "parallel_bus_ufm_parallel_0" -library "parallel_bus" -name IP_COMPONENT_DISPLAY_NAME "VXNlciBGbGFzaCBNZW1vcnkgZm9yIFBhcmFsbGVsIEludGVyZmFjZSBQcm90b2NvbCBJbnRlbCBGUEdBIElQ"
+set_global_assignment -entity "parallel_bus_ufm_parallel_0" -library "parallel_bus" -name IP_COMPONENT_REPORT_HIERARCHY "Off"
+set_global_assignment -entity "parallel_bus_ufm_parallel_0" -library "parallel_bus" -name IP_COMPONENT_INTERNAL "Off"
+set_global_assignment -entity "parallel_bus_ufm_parallel_0" -library "parallel_bus" -name IP_COMPONENT_AUTHOR "QWx0ZXJhIENvcnBvcmF0aW9u"
+set_global_assignment -entity "parallel_bus_ufm_parallel_0" -library "parallel_bus" -name IP_COMPONENT_VERSION "MjIuMQ=="
+set_global_assignment -entity "parallel_bus_ufm_parallel_0" -library "parallel_bus" -name IP_COMPONENT_DESCRIPTION "VGhlIEFsdGVyYSBVc2VyIEZsYXNoIE1lbW9yeSBmb3IgUGFyYWxsZWwgSW50ZXJmYWNlIFByb3RvY29sIG1lZ2FmdW5jdGlvbiBpbXBsZW1lbnRzIHVzZXIgIG5vbi12b2xhdGlsZSBtZW1vcnkgZm9yIE1BWCBJSS9NYXggViBkZXZpY2VzIHVzaW5nIHRoZSBwYXJhbGxlbCBpbnRlcmZhY2UgcHJvdG9jb2wu"
+set_global_assignment -entity "parallel_bus_ufm_parallel_0" -library "parallel_bus" -name IP_COMPONENT_PARAMETER "REVWSUNFX0ZBTUlMWQ==::TUFYIFY=::RGV2aWNlIGZhbWlseQ=="
+set_global_assignment -entity "parallel_bus_ufm_parallel_0" -library "parallel_bus" -name IP_COMPONENT_PARAMETER "Q0JYX0FVVE9fQkxBQ0tCT1g=::QUxM::Q0JYX0FVVE9fQkxBQ0tCT1g="
+set_global_assignment -entity "parallel_bus_ufm_parallel_0" -library "parallel_bus" -name IP_COMPONENT_PARAMETER "QUNDRVNTX01PREU=::UkVBRF9XUklURQ==::QWNjZXNzIG1vZGU="
+set_global_assignment -entity "parallel_bus_ufm_parallel_0" -library "parallel_bus" -name IP_COMPONENT_PARAMETER "V0lEVEhfQUREUkVTUw==::OA==::J2FkZHInIHdpZHRo"
+set_global_assignment -entity "parallel_bus_ufm_parallel_0" -library "parallel_bus" -name IP_COMPONENT_PARAMETER "V0lEVEhfREFUQQ==::OA==::J2RhdGFpbicgd2lkdGg="
+set_global_assignment -entity "parallel_bus_ufm_parallel_0" -library "parallel_bus" -name IP_COMPONENT_PARAMETER "T1NDX0NIRUNL::dHJ1ZQ==::VXNlICdvc2MnIG91dHB1dCBwb3J0"
+set_global_assignment -entity "parallel_bus_ufm_parallel_0" -library "parallel_bus" -name IP_COMPONENT_PARAMETER "T1NDRU5BX0NIRUNL::ZmFsc2U=::VXNlICdvc2NlbmEnIGlucHV0IHBvcnQ="
+set_global_assignment -entity "parallel_bus_ufm_parallel_0" -library "parallel_bus" -name IP_COMPONENT_PARAMETER "R1VJX01FTV9JTklU::SW5pdGlhbGl6ZSBibGFuayBtZW1vcnk=::TWVtb3J5IGNvbnRlbnQgaW5pdGlhbGl6YXRpb24="
+set_global_assignment -entity "parallel_bus_ufm_parallel_0" -library "parallel_bus" -name IP_COMPONENT_PARAMETER "R1VJX09TQ19GUkVRVUVOQ1k=::NS41Ng==::T3NjaWxsYXRvciBmcmVxdWVuY3k="
+set_global_assignment -entity "parallel_bus_ufm_parallel_0" -library "parallel_bus" -name IP_COMPONENT_PARAMETER "T1NDX0ZSRVFVRU5DWQ==::MTgwMDAw::T1NDX0ZSRVFVRU5DWQ=="
+set_global_assignment -entity "parallel_bus_ufm_parallel_0" -library "parallel_bus" -name IP_COMPONENT_PARAMETER "R1VJX0VSQVNFX1RJTUU=::NTAwMDAw::RXJhc2UgdGltZQ=="
+set_global_assignment -entity "parallel_bus_ufm_parallel_0" -library "parallel_bus" -name IP_COMPONENT_PARAMETER "RVJBU0VfVElNRQ==::NTAwMDAwMDAw::RVJBU0VfVElNRQ=="
+set_global_assignment -entity "parallel_bus_ufm_parallel_0" -library "parallel_bus" -name IP_COMPONENT_PARAMETER "R1VJX1BST0dSQU1fVElNRQ==::MTYwMA==::UHJvZ3JhbSB0aW1l"
+set_global_assignment -entity "parallel_bus_ufm_parallel_0" -library "parallel_bus" -name IP_COMPONENT_PARAMETER "UFJPR1JBTV9USU1F::MTYwMDAwMA==::UFJPR1JBTV9USU1F"
+set_global_assignment -entity "parallel_bus_ufm_parallel_0" -library "parallel_bus" -name IP_COMPONENT_PARAMETER "V0lEVEhfVUZNX0FERFJFU1M=::OQ==::V0lEVEhfVUZNX0FERFJFU1M="
+
+set_global_assignment -library "parallel_bus" -name VHDL_FILE [file join $::quartus(qip_path) "parallel_bus.vhd"]
+set_global_assignment -library "parallel_bus" -name VERILOG_FILE [file join $::quartus(qip_path) "submodules/parallel_bus_ufm_parallel_0.v"]
+
+set_global_assignment -entity "parallel_bus_ufm_parallel_0" -library "parallel_bus" -name IP_TOOL_NAME "altera_ufm_parallel"
+set_global_assignment -entity "parallel_bus_ufm_parallel_0" -library "parallel_bus" -name IP_TOOL_VERSION "22.1"
+set_global_assignment -entity "parallel_bus_ufm_parallel_0" -library "parallel_bus" -name IP_TOOL_ENV "Qsys"

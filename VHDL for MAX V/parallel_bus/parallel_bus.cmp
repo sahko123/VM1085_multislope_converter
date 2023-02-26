@@ -1,0 +1,14 @@
+	component parallel_bus is
+		port (
+			addr       : in  std_logic_vector(7 downto 0) := (others => 'X'); -- addr
+			data_valid : out std_logic;                                       -- data_valid
+			datain     : in  std_logic_vector(7 downto 0) := (others => 'X'); -- datain
+			dataout    : out std_logic_vector(7 downto 0);                    -- dataout
+			nbusy      : out std_logic;                                       -- nbusy
+			nerase     : in  std_logic                    := 'X';             -- nerase
+			nread      : in  std_logic                    := 'X';             -- nread
+			nwrite     : in  std_logic                    := 'X';             -- nwrite
+			osc        : out std_logic                                        -- osc
+		);
+	end component parallel_bus;
+
