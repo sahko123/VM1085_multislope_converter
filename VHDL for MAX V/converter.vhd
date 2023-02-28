@@ -86,7 +86,13 @@ end if;
 
 
 when "0010"=>					--runup
-SW_sample<='0';
+SW10K1<='1';
+
+if timer>="1010" then
+timer_reset<='1';
+state<="0011";
+end if;
+
 
 when "0011"=>
 
