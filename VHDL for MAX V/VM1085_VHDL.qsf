@@ -61,3 +61,4 @@ set_global_assignment -name VHDL_SHOW_LMF_MAPPING_MESSAGES OFF
 set_global_assignment -name VHDL_FILE ../bit8_register.vhd
 set_global_assignment -name VHDL_FILE ../VM1085_VHDL.vhd
 set_global_assignment -name VHDL_FILE converter.vhd
+set_global_assignment -name VHDL_FILE counter.vhd
