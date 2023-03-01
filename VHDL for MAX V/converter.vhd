@@ -7,7 +7,7 @@ port(
 CLK:in std_logic;
 data:out std_logic_vector(7 downto 0):=(others=>'Z');
 address:in std_logic_vector(3 downto 0);
-SW_sample,SW10K1,SW10k2,SW80k3,SW640K4,SW5120K5:out std_logic:='0';
+SW_sample,SW10K1,SW10k2,SW80k3,SW640K4,SW5120K5,SW_short:out std_logic:='0';
 COMP,CONV:in std_logic
 
 );
@@ -64,8 +64,8 @@ process(CLK) begin
 
 case state is
 
-
-when "0000" =>					--initial state;
+-----------------------------------------------initial state
+when "0000" =>
 SW_sample<='0';
 SW10K1<='0';
 SW10K2<='0';
@@ -73,25 +73,32 @@ SW80K3<='0';
 SW640K4<='0';
 SW5120K5<='0';
 timer_reset<='1';
+SW_short<='1';
 if CONV='1' then --if conversion triggered
 state<="0001";
 timer_reset<='0';
 end if;
+-----------------------------------------------pause before conversion
+when "0001"=>
+if timer="0100" then
+state<="0010";
+end if;
+-----------------------------------------------t1 sample
 
-
-
-when "0001"=>					--t1 sample
+when "0010"=>
 SW_sample<='1'; --enable sample switch
 if timer>="0111" then
 timer_reset<='1';
-state<="0010";
+state<="0011";
 
 comp_hold<=comp;
 
 end if;
 
 
-when "0010"=>					--runup
+
+-----------------------------------------------runup
+when "0011"=>					--runup
 timer_reset<='0';
 if comp_hold='0' then
 SW10K1<='1';--positive ramp
@@ -116,27 +123,27 @@ RP_COUNT<=RP_COUNT-1;
 end if;
 timer_reset<='1';
 comp_hold<=comp;
-state<="0011";
+state<="0100";
 end if;
+-----------------------------------------------recharge
 
 
 
-
-when "0011"=> --recharge
+when "0100"=> --recharge
 timer_reset<='0';
 SW10K1<='0';
 SW10K2<='0';
 if timer="0011" then
 if CONV='1' then
-state<="0010";
+state<="0011";
 timer_reset<='1';
 else
-state<="0100";
+state<="0101";
 end if;
 end if;
 
-
-when "0100"=>--rundown 10k pos
+-----------------------------------------------rundown 10k pos
+when "0101"=>
 SW10K2<='0';
 if CLK<='1' then
 comp_hold<=comp;
@@ -146,11 +153,11 @@ if comp_hold='0' then
 SW10K1<='1';--positive ramp
 count_stage12<=count_stage12+1;
 else
-state<="0101";
+state<="0110";
 end if;
 
-
-when "0101"=>--rundown 10k neg
+-----------------------------------------------rundown 10k neg
+when "0110"=>--
 SW10K1<='0';
 SW_sample<='0';
 if CLK<='1' then
@@ -161,10 +168,10 @@ if comp_hold='1' then--negative ramp
 SW10K2<='1';
 count_stage12<=count_stage12-1;
 else
-state<="0110";
+state<="0111";
 end if;
-
-when "0110"=>--rundown 80k
+-----------------------------------------------rundown 80k
+when "0111"=>--
 SW10K1<='0';
 SW10K2<='0';
 if CLK<='1' then
@@ -175,11 +182,11 @@ if comp_hold='0' then
 SW80K3<='1';--positive ramp
 count_stage34<=count_stage34+"00010000";
 else
-state<="0111";
+state<="1000";
 end if;
 
-
-when "0111"=>--rundown 640k
+-----------------------------------------------rundown 640k
+when "1000"=>--
 SW80K3<='0';
 
 if CLK<='1' then
@@ -190,10 +197,10 @@ if comp_hold='1' then
 SW640K4<='1';--positive ramp
 count_stage34<=count_stage34+"00000001";
 else
-state<="1000";
+state<="1001";
 end if;
-
-when "1000"=>--rundown 5.12M
+-----------------------------------------------rundown 5.12M
+when "1001"=>--
 SW640K4<='0';
 
 if CLK<='1' then
@@ -206,7 +213,7 @@ count_stage5<=count_stage5+1;
 else
 state<="0000";
 end if;
-
+-----------------------------------------------
 when others =>state<="0000";
 end case;
 end process;
