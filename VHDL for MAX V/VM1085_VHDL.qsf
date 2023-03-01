@@ -62,3 +62,26 @@ set_global_assignment -name VHDL_FILE ../bit8_register.vhd
 set_global_assignment -name VHDL_FILE ../VM1085_VHDL.vhd
 set_global_assignment -name VHDL_FILE converter.vhd
 set_global_assignment -name VHDL_FILE counter.vhd
+set_location_assignment PIN_H5 -to CLK
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to SW_short
+set_location_assignment PIN_P2 -to address[0]
+set_location_assignment PIN_M4 -to address[1]
+set_location_assignment PIN_L4 -to address[2]
+set_location_assignment PIN_N3 -to address[3]
+set_location_assignment PIN_N2 -to data[0]
+set_location_assignment PIN_N1 -to data[1]
+set_location_assignment PIN_M3 -to data[2]
+set_location_assignment PIN_M2 -to data[3]
+set_location_assignment PIN_M1 -to data[4]
+set_location_assignment PIN_L3 -to data[5]
+set_location_assignment PIN_L1 -to data[6]
+set_location_assignment PIN_L2 -to data[7]
+set_location_assignment PIN_K2 -to CONV
+set_location_assignment PIN_K3 -to COMP
+set_location_assignment PIN_G3 -to SW10K1
+set_location_assignment PIN_H3 -to SW10k2
+set_location_assignment PIN_H2 -to SW80k3
+set_location_assignment PIN_J3 -to SW_short
+set_location_assignment PIN_K1 -to SW_sample
+set_location_assignment PIN_J1 -to SW5120K5
+set_location_assignment PIN_J2 -to SW640K4
