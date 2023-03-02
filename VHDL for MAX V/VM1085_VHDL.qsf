@@ -85,3 +85,8 @@ set_location_assignment PIN_J3 -to SW_short
 set_location_assignment PIN_K1 -to SW_sample
 set_location_assignment PIN_J1 -to SW5120K5
 set_location_assignment PIN_J2 -to SW640K4
+set_location_assignment PIN_P4 -to state_output_0
+set_location_assignment PIN_R1 -to state_output_1
+set_location_assignment PIN_H1 -to CLK_pass
+set_global_assignment -name TIMING_ANALYZER_MULTICORNER_ANALYSIS OFF
+set_global_assignment -name SMART_RECOMPILE ON
