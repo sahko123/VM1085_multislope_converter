@@ -75,13 +75,13 @@ case state is
 
 -----------------------------------------------initial state
 when "0000" =>
-
 SW_sample<='0';
 SW10K1<='0';
 SW10K2<='0';
 SW80K3<='0';
 SW640K4<='0';
 SW5120K5<='0';
+timer_reset<='0';
 if CONV='1' then --if conversion triggered
 state<="0001";
 timer_reset<='1';
@@ -94,46 +94,33 @@ count_stage12<=(others=>'0');
 count_stage34<=(others=>'0');
 count_stage5<=(others=>'0');
 SW_short<='1';
-if timer>="0101" then
+if timer="0101" then
 state<="0010";
-SW_short<='0';
 timer_reset<='1';
 end if;
 -----------------------------------------------t1 sample
-
 when "0010"=>
+SW_short<='0';
 timer_reset<='0';
-SW_sample<='1'; --enable sample switch
+SW_sample<='1';
 comp_hold<=comp;
-if timer>="0111" then
+if timer="0111" then
 timer_reset<='1';
 state<="0011";
-
-
-
 end if;
-
-
-
 -----------------------------------------------runup
-when "0011"=>					--runup
+when "0011"=>
 timer_reset<='0';
+
 if comp_hold='0' then
 SW10K1<='1';--positive ramp
 SW10K2<='0';
-if timer="0101" then
-SW10K2<='1';
-end if;
 else
 SW10K1<='0';--negative ramp
 SW10K2<='1';
-if timer="0101" then
-SW10K1<='1';
-end if;
 end if;
 
-
-if timer>="1010" then --if timer=10
+if timer="1010" then --if timer=10
 if comp_hold='1' then
 RP_COUNT<=RP_COUNT+1;
 comp_hold<=comp;
@@ -142,18 +129,14 @@ RP_COUNT<=RP_COUNT-1;
 comp_hold<=comp;
 end if;
 timer_reset<='1';
-comp_hold<=comp;
 state<="0100";
 end if;
 -----------------------------------------------recharge
-
-
-
 when "0100"=> --recharge
 timer_reset<='0';
 SW10K1<='0';
 SW10K2<='0';
-if timer>="0011" then
+if timer="0011" then
 timer_reset<='1';
 if CONV='1' then
 state<="0011";
@@ -161,7 +144,6 @@ else
 state<="0101";
 end if;
 end if;
-
 -----------------------------------------------rundown 10k pos
 when "0101"=>
 SW10K2<='0';
@@ -226,7 +208,7 @@ SW640K4<='0';
 if CLK<='1' then
 comp_hold<=comp;
 end if;
-
+if comp_hold=not comp then
 SW5120K5<='1';--positive ramp
 count_stage5<=count_stage5+1;
 else

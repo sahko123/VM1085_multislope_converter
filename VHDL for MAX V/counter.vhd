@@ -15,11 +15,10 @@ count_out<=std_logic_vector(count);
 
 process(CLK,RST) begin
 if rising_edge(clk) then
+count<=count+1;
+end if;
 if RST='1' then
 count<="0000";
-else
-count<=count+1; 
-end if;
 end if;
 end process;
 
