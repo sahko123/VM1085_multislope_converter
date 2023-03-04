@@ -47,7 +47,7 @@ time_counter:counter port map(count_out=>timer,CLK=>CLK,RST=>timer_reset);
 
 --control registers
 process(address,CLK) begin
-	--if rising_edge(clk) then
+	if rising_edge(clk) then
 	case address is
 		when "0000" => data<=std_logic_vector(count_stage12);
 		when "0001" => data<=std_logic_vector(count_stage34);
@@ -62,7 +62,7 @@ process(address,CLK) begin
 		when others => data<="01010101";
 		
 	end case;
-	--end if;
+	end if;
 end process;
 
 --conversion process
@@ -70,7 +70,7 @@ end process;
 
 
 process(CLK) begin
-
+if rising_edge(CLK) then
 case state is
 
 -----------------------------------------------initial state
@@ -147,11 +147,8 @@ end if;
 -----------------------------------------------rundown 10k pos
 when "0101"=>
 SW10K2<='0';
-if CLK<='1' then
 comp_hold<=comp;
-end if;
-
-if comp_hold=not comp then
+if comp_hold='0' then
 SW10K1<='1';--positive ramp
 count_stage12<=count_stage12+1;
 else
@@ -162,53 +159,43 @@ end if;
 when "0110"=>--
 SW10K1<='0';
 SW_sample<='0';
-if CLK<='1' then
 comp_hold<=comp;
-end if;
 
-if comp_hold=not comp then--negative ramp
+if comp_hold='1' then--negative ramp
 SW10K2<='1';
 count_stage12<=count_stage12-1;
 else
 state<="0111";
 end if;
------------------------------------------------rundown 80k
+-----------------------------------------------rundown 80k pos
 when "0111"=>--
 SW10K1<='0';
 SW10K2<='0';
-if CLK<='1' then
 comp_hold<=comp;
-end if;
 
-if comp_hold=not comp then
+if comp_hold='0' then
 SW80K3<='1';--positive ramp
 count_stage34<=count_stage34+"00010000";
 else
 state<="1000";
 end if;
 
------------------------------------------------rundown 640k
+-----------------------------------------------rundown 640k neg
 when "1000"=>--
 SW80K3<='0';
-
-if CLK<='1' then
 comp_hold<=comp;
-end if;
 
-if comp_hold=not comp then
+if comp_hold='1' then
 SW640K4<='1';--positive ramp
 count_stage34<=count_stage34+"00000001";
 else
 state<="1001";
 end if;
------------------------------------------------rundown 5.12M
+-----------------------------------------------rundown 5.12M pos
 when "1001"=>--
 SW640K4<='0';
-
-if CLK<='1' then
 comp_hold<=comp;
-end if;
-if comp_hold=not comp then
+if comp_hold='0' then
 SW5120K5<='1';--positive ramp
 count_stage5<=count_stage5+1;
 else
@@ -217,6 +204,7 @@ end if;
 -----------------------------------------------
 when others =>state<="0000";
 end case;
+end if;
 end process;
 
 
