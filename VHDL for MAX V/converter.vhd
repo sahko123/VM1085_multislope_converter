@@ -30,7 +30,7 @@ signal state:std_logic_vector(3 downto 0):=(others=>'0');
 signal timer:std_logic_vector(3 downto 0):=(others=>'0');
 signal timer_reset:std_logic:='0';
 signal comp_hold:std_logic:='0';--flag for comparator input
-
+signal ready,conving:std_logic;--status flags
 
 component counter is
 port(
@@ -40,21 +40,21 @@ RST,CLK:in std_logic:='0'
 end component;
 begin
 
-state_output_0<=not state(0);
-state_output_1<=not state(1);
+state_output_0<=not ready;
+state_output_1<=not conving;
 CLK_pass<=CLK;
 time_counter:counter port map(count_out=>timer,CLK=>CLK,RST=>timer_reset);
 
 --control registers
 process(address,CLK) begin
-	if rising_edge(clk) then
+	if falling_edge(clk) then
 	case address is
-		when "0000" => data<=std_logic_vector(count_stage12);
-		when "0001" => data<=std_logic_vector(count_stage34);
-		when "0010" => data<=std_logic_vector(count_stage5);
-		when "0011" => data<=std_logic_vector(RP_COUNT(7 downto 0));
-		when "0100" => data<=std_logic_vector(RP_COUNT(15 downto 8));
-		when "0101" => data<=std_logic_vector(RP_COUNT(23 downto 16));
+		when "0000" => data<=std_logic_vector(RP_COUNT(7 downto 0));
+		when "0001" => data<=std_logic_vector(RP_COUNT(15 downto 8));
+		when "0010" => data<=std_logic_vector(RP_COUNT(23 downto 16));
+		when "0011" => data<=std_logic_vector(count_stage12);
+		when "0100" => data<=std_logic_vector(count_stage34);
+		when "0101" => data<=std_logic_vector(count_stage5);
 		when "0110" => data<="01010101";
 		when "0111" => data(3 downto 0)<=timer;data(7 downto 4)<=(others=>'0');
 		when "1000" => data(3 downto 0)<=state;data(7 downto 4)<=(others=>'0');
@@ -75,24 +75,27 @@ case state is
 
 -----------------------------------------------initial state
 when "0000" =>
+timer_reset<='1';
+conving<='0';
 SW_sample<='0';
 SW10K1<='0';
 SW10K2<='0';
 SW80K3<='0';
 SW640K4<='0';
 SW5120K5<='0';
-timer_reset<='0';
+ready<='1';
 if CONV='1' then --if conversion triggered
+ready<='0';
 state<="0001";
-timer_reset<='1';
-end if;
------------------------------------------------pause before conversion
-when "0001"=>
-timer_reset<='0';
 RP_COUNT<=(others=>'0');
 count_stage12<=(others=>'0');
 count_stage34<=(others=>'0');
 count_stage5<=(others=>'0');
+end if;
+-----------------------------------------------pause before conversion
+when "0001"=>
+conving<='1';
+timer_reset<='0';
 SW_short<='1';
 if timer="0101" then
 state<="0010";
