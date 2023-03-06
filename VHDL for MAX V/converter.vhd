@@ -116,20 +116,19 @@ when "0011"=>
 timer_reset<='0';
 
 if comp_hold='0' then
-SW10K1<='1';--positive ramp
-SW10K2<='0';
-else
-SW10K1<='0';--negative ramp
+SW10K1<='0';--positive ramp
 SW10K2<='1';
+else
+SW10K1<='1';--negative ramp
+SW10K2<='0';
 end if;
 
 if timer="1010" then --if timer=10
+comp_hold<=comp;
 if comp_hold='1' then
 RP_COUNT<=RP_COUNT+1;
-comp_hold<=comp;
 else
 RP_COUNT<=RP_COUNT-1;
-comp_hold<=comp;
 end if;
 timer_reset<='1';
 state<="0100";
@@ -145,13 +144,14 @@ if CONV='1' then
 state<="0011";
 else
 state<="0101";
+SW_sample<='0';
 end if;
 end if;
 -----------------------------------------------rundown 10k pos
 when "0101"=>
 SW10K2<='0';
 comp_hold<=comp;
-if comp_hold='0' then
+if comp_hold='1' then
 SW10K1<='1';--positive ramp
 count_stage12<=count_stage12+1;
 else
@@ -161,10 +161,9 @@ end if;
 -----------------------------------------------rundown 10k neg
 when "0110"=>--
 SW10K1<='0';
-SW_sample<='0';
 comp_hold<=comp;
 
-if comp_hold='1' then--negative ramp
+if comp_hold='0' then--negative ramp
 SW10K2<='1';
 count_stage12<=count_stage12-1;
 else
@@ -176,7 +175,7 @@ SW10K1<='0';
 SW10K2<='0';
 comp_hold<=comp;
 
-if comp_hold='0' then
+if comp_hold='1' then
 SW80K3<='1';--positive ramp
 count_stage34<=count_stage34+"00010000";
 else
@@ -188,7 +187,7 @@ when "1000"=>--
 SW80K3<='0';
 comp_hold<=comp;
 
-if comp_hold='1' then
+if comp_hold='0' then
 SW640K4<='1';--positive ramp
 count_stage34<=count_stage34+"00000001";
 else
@@ -198,7 +197,7 @@ end if;
 when "1001"=>--
 SW640K4<='0';
 comp_hold<=comp;
-if comp_hold='0' then
+if comp_hold='1' then
 SW5120K5<='1';--positive ramp
 count_stage5<=count_stage5+1;
 else
