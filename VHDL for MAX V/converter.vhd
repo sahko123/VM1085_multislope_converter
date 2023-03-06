@@ -11,7 +11,8 @@ SW_sample,SW10K1,SW10k2,SW80k3,SW640K4,SW5120K5,SW_short:out std_logic:='0';
 state_output_0:out std_logic:='0';
 state_output_1:out std_logic:='0';
 COMP,CONV:in std_logic;
-CLK_pass:out std_logic
+CLK_pass:out std_logic;
+data_ready:out std_logic
 );
 end entity;
 
@@ -21,8 +22,8 @@ end entity;
 
 architecture behavioral of converter is
 
-signal conversion_timer:unsigned(32 downto 0);
-signal opp_conversion_timer:unsigned(32 downto 0);
+signal conversion_timer:signed(31 downto 0);
+signal neg_conversion_timer:signed(31 downto 0):=to_signed(10000000,32);
 signal RP_COUNT:signed(23 downto 0):=(others=>'0');--runup counter
 signal count_stage12:unsigned(7 downto 0):=(others=>'0');--10k rundown
 signal count_stage34:unsigned(7 downto 0):=(others=>'0');--80k pos(4MSB) 640k neg(4LSB)
@@ -66,18 +67,28 @@ process(address,CLK) begin
 	end if;
 end process;
 
+--sample timing
+process(CLK,conving) begin
+
+if falling_edge(CLK) then
+conversion_timer<=conversion_timer+1;
+neg_conversion_timer<=neg_conversion_timer-1;
+end if;
+
+end process;
+
 --conversion process
-
-
-
 process(CLK) begin
 if rising_edge(CLK) then
 case state is
 
 -----------------------------------------------initial state
 when "0000" =>
+
+data_ready<='1';
 timer_reset<='1';
 conving<='0';
+SW_short<='1';
 SW_sample<='0';
 SW10K1<='0';
 SW10K2<='0';
@@ -95,9 +106,10 @@ count_stage5<=(others=>'0');
 end if;
 -----------------------------------------------pause before conversion
 when "0001"=>
+data_ready<='0';
 conving<='1';
-timer_reset<='0';
 SW_short<='1';
+timer_reset<='0';
 if timer="0101" then
 state<="0010";
 timer_reset<='1';
@@ -119,7 +131,7 @@ timer_reset<='0';
 if comp_hold='0' then
 SW10K2<='1';
 if timer="0100" then
-SW10K1<='1';
+SW10K1<='0';
 else
 SW10K1<='0';--positive ramp
 end if;
@@ -127,7 +139,7 @@ end if;
 else
 SW10K1<='1';--negative ramp
 if timer="0100" then
-SW10K2<='1';
+SW10K2<='0';
 else
 SW10K2<='0';--positive ramp
 end if;
