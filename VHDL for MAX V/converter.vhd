@@ -21,7 +21,8 @@ end entity;
 
 architecture behavioral of converter is
 
-
+signal conversion_timer:unsigned(32 downto 0);
+signal opp_conversion_timer:unsigned(32 downto 0);
 signal RP_COUNT:signed(23 downto 0):=(others=>'0');--runup counter
 signal count_stage12:unsigned(7 downto 0):=(others=>'0');--10k rundown
 signal count_stage34:unsigned(7 downto 0):=(others=>'0');--80k pos(4MSB) 640k neg(4LSB)
@@ -116,11 +117,20 @@ when "0011"=>
 timer_reset<='0';
 
 if comp_hold='0' then
-SW10K1<='0';--positive ramp
 SW10K2<='1';
+if timer="0100" then
+SW10K1<='1';
+else
+SW10K1<='0';--positive ramp
+end if;
+
 else
 SW10K1<='1';--negative ramp
-SW10K2<='0';
+if timer="0100" then
+SW10K2<='1';
+else
+SW10K2<='0';--positive ramp
+end if;
 end if;
 
 if timer="1010" then --if timer=10
