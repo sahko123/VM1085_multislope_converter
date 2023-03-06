@@ -16,14 +16,10 @@ data_ready:out std_logic
 );
 end entity;
 
-
-
-
-
 architecture behavioral of converter is
 
 signal conversion_timer:signed(31 downto 0);
-signal neg_conversion_timer:signed(31 downto 0):=to_signed(10000000,32);
+signal sample_time:signed(31 downto 0):=to_signed(10000000,32);
 signal RP_COUNT:signed(23 downto 0):=(others=>'0');--runup counter
 signal count_stage12:unsigned(7 downto 0):=(others=>'0');--10k rundown
 signal count_stage34:unsigned(7 downto 0):=(others=>'0');--80k pos(4MSB) 640k neg(4LSB)
@@ -70,9 +66,8 @@ end process;
 --sample timing
 process(CLK,conving) begin
 
-if falling_edge(CLK) then
-conversion_timer<=conversion_timer+1;
-neg_conversion_timer<=neg_conversion_timer-1;
+if falling_edge(CLK) and data_ready='1' then
+conversion_timer<=conversion_timer-1;
 end if;
 
 end process;
@@ -84,7 +79,6 @@ case state is
 
 -----------------------------------------------initial state
 when "0000" =>
-
 data_ready<='1';
 timer_reset<='1';
 conving<='0';
@@ -97,6 +91,7 @@ SW640K4<='0';
 SW5120K5<='0';
 ready<='1';
 if CONV='1' then --if conversion triggered
+conversion_timer<=sample_time;
 ready<='0';
 state<="0001";
 RP_COUNT<=(others=>'0');
