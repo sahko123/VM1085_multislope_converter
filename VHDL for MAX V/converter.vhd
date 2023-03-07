@@ -56,6 +56,13 @@ process(address,CLK) begin
 		when "0110" => data<="01010101";
 		when "0111" => data(3 downto 0)<=timer;data(7 downto 4)<=(others=>'0');
 		when "1000" => data(3 downto 0)<=state;data(7 downto 4)<=(others=>'0');
+		when "1001" => data<=std_logic_vector(conversion_timer(7 downto 0));
+		when "1010" => data<=std_logic_vector(conversion_timer(15 downto 8));
+		when "1011" => data<=std_logic_vector(conversion_timer(23 downto 16));
+		when "1100" => data<=std_logic_vector(conversion_timer(31 downto 24));
+		when "1101" => data<=std_logic_vector(sample_time(7 downto 0));
+		when "1110" => data<=std_logic_vector(sample_time(15 downto 8));
+		when "1111" => data<=std_logic_vector(sample_time(23 downto 16));
 		--when others => data<=(others=>'Z');
 		when others => data<="01010101";
 		
@@ -63,18 +70,15 @@ process(address,CLK) begin
 	end if;
 end process;
 
---sample timing
-process(CLK,conving) begin
 
-if falling_edge(CLK) and data_ready='1' then
-conversion_timer<=conversion_timer-1;
-end if;
-
-end process;
 
 --conversion process
 process(CLK) begin
 if rising_edge(CLK) then
+
+if data_ready='0' then
+conversion_timer<=conversion_timer-1;
+end if;
 case state is
 
 -----------------------------------------------initial state
@@ -105,7 +109,7 @@ data_ready<='0';
 conving<='1';
 SW_short<='1';
 timer_reset<='0';
-if timer="0101" then
+if timer="1111" then
 state<="0010";
 timer_reset<='1';
 end if;
@@ -124,17 +128,21 @@ when "0011"=>
 timer_reset<='0';
 
 if comp_hold='0' then
+RP_COUNT<=RP_COUNT-1;
 SW10K2<='1';
 if timer="0100" then
-SW10K1<='0';
+RP_COUNT<=RP_COUNT+1;
+SW10K1<='1';
 else
 SW10K1<='0';--positive ramp
 end if;
 
 else
+RP_COUNT<=RP_COUNT+1;
 SW10K1<='1';--negative ramp
 if timer="0100" then
-SW10K2<='0';
+RP_COUNT<=RP_COUNT-1;
+SW10K2<='1';
 else
 SW10K2<='0';--positive ramp
 end if;
@@ -142,14 +150,17 @@ end if;
 
 if timer="1010" then --if timer=10
 comp_hold<=comp;
-if comp_hold='1' then
-RP_COUNT<=RP_COUNT+1;
-else
-RP_COUNT<=RP_COUNT-1;
-end if;
 timer_reset<='1';
+if conversion_timer<=0 then
+state<="0101";
+SW_sample<='0';
+else
 state<="0100";
 end if;
+end if;
+
+
+
 -----------------------------------------------recharge
 when "0100"=> --recharge
 timer_reset<='0';
@@ -157,12 +168,7 @@ SW10K1<='0';
 SW10K2<='0';
 if timer="0011" then
 timer_reset<='1';
-if CONV='1' then
 state<="0011";
-else
-state<="0101";
-SW_sample<='0';
-end if;
 end if;
 -----------------------------------------------rundown 10k pos
 when "0101"=>
