@@ -128,14 +128,19 @@ when "0011"=>
 timer_reset<='0';
 
 if comp_hold='0' then
-RP_COUNT<=RP_COUNT-1;
+--RP_COUNT<=RP_COUNT-1;
 SW10K2<='1';
 else
-RP_COUNT<=RP_COUNT+1;
+--RP_COUNT<=RP_COUNT+1;
 SW10K1<='1';
 end if;
 
 if timer="1010" then --if timer=10
+if comp_hold='0' then
+RP_COUNT<=RP_COUNT-1;
+else
+RP_COUNT<=RP_COUNT+1;
+end if;
 comp_hold<=comp;
 timer_reset<='1';
 if conversion_timer<=0 then
