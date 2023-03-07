@@ -60,9 +60,6 @@ process(address,CLK) begin
 		when "1010" => data<=std_logic_vector(conversion_timer(15 downto 8));
 		when "1011" => data<=std_logic_vector(conversion_timer(23 downto 16));
 		when "1100" => data<=std_logic_vector(conversion_timer(31 downto 24));
-		when "1101" => data<=std_logic_vector(sample_time(7 downto 0));
-		when "1110" => data<=std_logic_vector(sample_time(15 downto 8));
-		when "1111" => data<=std_logic_vector(sample_time(23 downto 16));
 		--when others => data<=(others=>'Z');
 		when others => data<="01010101";
 		
@@ -135,23 +132,28 @@ else
 SW10K1<='1';
 end if;
 
+if conversion_timer=0 then
+state<="0101";
+end if;
+
 if timer="1010" then --if timer=10
+
 if comp_hold='0' then
 RP_COUNT<=RP_COUNT-1;
 else
 RP_COUNT<=RP_COUNT+1;
 end if;
+
 comp_hold<=comp;
 timer_reset<='1';
-if conversion_timer<=0 then
-state<="0101";
-else
 state<="0100";
-end if;
-end if;
+end if;--if timer=10
 
 -----------------------------------------------recharge
 when "0100"=> --recharge
+if conversion_timer=0 then
+state<="0101";
+end if;
 timer_reset<='0';
 SW10K1<='0';
 SW10K2<='0';
