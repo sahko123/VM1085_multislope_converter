@@ -94,8 +94,8 @@ SW80K3<='0';
 SW640K4<='0';
 SW5120K5<='0';
 ready<='1';
-if CONV='1' then --if conversion triggered
 conversion_timer<=sample_time;
+if CONV='1' then --if conversion triggered
 ready<='0';
 state<="0001";
 RP_COUNT<=(others=>'0');
@@ -144,8 +144,6 @@ else
 state<="0100";
 end if;
 end if;
-
-
 
 -----------------------------------------------recharge
 when "0100"=> --recharge
