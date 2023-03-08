@@ -7,7 +7,7 @@ port(
 CLK:in std_logic;
 data:out std_logic_vector(7 downto 0):=(others=>'Z');
 address:in std_logic_vector(3 downto 0);
-SW_sample,SW10K1,SW10k2,SW80k3,SW640K4,SW5120K5,SW_short:out std_logic:='0';
+SW_sample,SW10K1,SW10k2,SW80k3,SW640K4,SW5120K5,SW_short,SW_input0:out std_logic:='0';
 state_output_0:out std_logic:='0';
 state_output_1:out std_logic:='0';
 COMP,CONV:in std_logic;
@@ -19,7 +19,7 @@ end entity;
 architecture behavioral of converter is
 
 signal conversion_timer:signed(31 downto 0);
-signal sample_time:signed(31 downto 0):=to_signed(10000000,32);
+signal sample_time:signed(31 downto 0):=to_signed(5000000,32);
 signal RP_COUNT:signed(23 downto 0):=(others=>'0');--runup counter
 signal count_stage12:unsigned(7 downto 0):=(others=>'0');--10k rundown
 signal count_stage34:unsigned(7 downto 0):=(others=>'0');--80k pos(4MSB) 640k neg(4LSB)
@@ -45,7 +45,7 @@ time_counter:counter port map(count_out=>timer,CLK=>CLK,RST=>timer_reset);
 
 --control registers
 process(address,CLK) begin
-	if falling_edge(clk) then
+	--if falling_edge(clk) then
 	case address is
 		when "0000" => data<=std_logic_vector(RP_COUNT(7 downto 0));
 		when "0001" => data<=std_logic_vector(RP_COUNT(15 downto 8));
@@ -64,7 +64,7 @@ process(address,CLK) begin
 		when others => data<="01010101";
 		
 	end case;
-	end if;
+	--end if;
 end process;
 
 
@@ -73,16 +73,18 @@ end process;
 process(CLK) begin
 if rising_edge(CLK) then
 
-if data_ready='0' then
+if data_ready='0' then --sample timer counter
 conversion_timer<=conversion_timer-1;
 end if;
-case state is
 
+case state is
 -----------------------------------------------initial state
 when "0000" =>
+
 data_ready<='1';
 timer_reset<='1';
 conving<='0';
+SW_input0<='1';
 SW_short<='1';
 SW_sample<='0';
 SW10K1<='0';
@@ -106,12 +108,14 @@ data_ready<='0';
 conving<='1';
 SW_short<='1';
 timer_reset<='0';
+conversion_timer<=sample_time;
 if timer="1111" then
 state<="0010";
 timer_reset<='1';
 end if;
 -----------------------------------------------t1 sample
 when "0010"=>
+SW_input0<='0';
 SW_short<='0';
 timer_reset<='0';
 SW_sample<='1';
@@ -127,9 +131,19 @@ timer_reset<='0';
 if comp_hold='0' then
 --RP_COUNT<=RP_COUNT-1;
 SW10K2<='1';
+if timer="0100" then
+SW10K1<='1';
+else
+SW10K1<='0';
+end if;
 else
 --RP_COUNT<=RP_COUNT+1;
 SW10K1<='1';
+if timer="0100" then
+SW10K2<='1';
+else
+SW10K2<='0';
+end if;
 end if;
 
 if conversion_timer=0 then
@@ -137,7 +151,6 @@ state<="0101";
 end if;
 
 if timer="1010" then --if timer=10
-
 if comp_hold='0' then
 RP_COUNT<=RP_COUNT-1;
 else
