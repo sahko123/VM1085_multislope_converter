@@ -90,4 +90,4 @@ set_location_assignment PIN_R1 -to state_output_1
 set_location_assignment PIN_H1 -to CLK_pass
 set_global_assignment -name TIMING_ANALYZER_MULTICORNER_ANALYSIS OFF
 set_global_assignment -name SMART_RECOMPILE ON
-set_location_assignment PIN_H3 -to data_ready
+set_location_assignment PIN_K3 -to data_ready
