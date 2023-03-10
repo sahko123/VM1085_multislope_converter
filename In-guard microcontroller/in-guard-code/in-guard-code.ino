@@ -105,22 +105,35 @@ int read_run34(){
   int reading=read_cpld(0b00000100);
   return reading;
   }
+int read_run3(){
+  byte temp=read_cpld(0b00000100);
+  int reading;
+  temp=temp & 0b00001111;
+  reading=temp;
+  return reading;
+}
+int read_run4(){
+  byte temp=read_cpld(0b00000100);
+  int reading;
+  temp=(temp & 0b11110000)>>4;
+  reading=temp;
+  return reading;
+  } 
 int read_run5(){
   int reading=read_cpld(0b00000101);
   return reading;
   }
 double conversion(long testcount,int rpd1){
   double reading;
-  double cal=-4.364321;
-  double samplecount=1*10000000.0;
-  reading=(10/cal)*((10*((7*testcount)+rpd1)/samplecount));
+  double cal=-4.360596600000;
+  double samplecount=10*10000000.0;
+  reading=(10/cal)*((10*((7*testcount)-rpd1)/samplecount));
   return reading;
   }
 double raw_conversion(long testcount,int rpd1){
   double reading;
-  double cal=-4.364321;
-  double samplecount=1*10000000.0;
-  reading=((10*((7*testcount)+rpd1)/samplecount));
+  double samplecount=10*10000000.0;
+  reading=((10*((7*testcount)-rpd1)/samplecount));
   return reading;
   }
 void setup() {
@@ -131,9 +144,7 @@ void setup() {
   pinMode(add_1,OUTPUT);
   pinMode(add_2,OUTPUT);
   pinMode(add_3,OUTPUT);
-  digitalWrite(conv,HIGH);
-  delay(100);
-  digitalWrite(conv,LOW);
+
   
 }
 
@@ -145,8 +156,10 @@ void loop() {
     Serial.println(get_runup_read());
     Serial.print("Rundown 12: ");
     Serial.println(read_run12());
-    Serial.print("Rundown 34: ");
-    Serial.println(read_run34());
+    Serial.print("Rundown 3: ");
+    Serial.println(read_run3());
+    Serial.print("Rundown 4: ");
+    Serial.println(read_run4());
     Serial.print("Rundown 5: ");
     Serial.println(read_run5());
     Serial.print("Raw Cal: ");
