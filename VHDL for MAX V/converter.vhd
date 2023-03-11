@@ -19,7 +19,7 @@ end entity;
 architecture behavioral of converter is
 
 signal conversion_timer:signed(31 downto 0);
-signal sample_time:signed(31 downto 0):=to_signed(100000000,32);
+signal sample_time:signed(31 downto 0):=to_signed(10000000,32);
 signal RP_COUNT:signed(23 downto 0):=(others=>'0');--runup counter
 signal count_stage12:unsigned(7 downto 0):=(others=>'0');--10k rundown
 signal count_stage34:unsigned(7 downto 0):=(others=>'0');--80k pos(4MSB) 640k neg(4LSB)
@@ -130,14 +130,14 @@ timer_reset<='0';
 
 if comp_hold='0' then
 SW10K2<='1';
-if timer="0010" then
+if timer="0100" then
 SW10K1<='1';
 else
 SW10K1<='0';
 end if;
 else
 SW10K1<='1';
-if timer="0010" then
+if timer="0100" then
 SW10K2<='1';
 else
 SW10K2<='0';
@@ -145,7 +145,7 @@ end if;
 end if;
 
 
-if timer="0111" then --if timer=7
+if timer="1010" then --if timer=7
 
 if conversion_timer<=0 then
 state<="0101";
@@ -165,13 +165,14 @@ end if; --if timer=7
 -----------------------------------------------recharge
 when "0100"=> --recharge
 comp_hold<=comp;
-if conversion_timer<=0 then
-state<="0101";
-end if;
+
 timer_reset<='0';
 SW10K1<='0';
 SW10K2<='0';
 if timer="0011" then
+if conversion_timer<=0 then
+state<="0101";
+end if;
 timer_reset<='1';
 state<="0011";
 end if;
