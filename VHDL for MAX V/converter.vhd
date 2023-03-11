@@ -165,14 +165,13 @@ end if; --if timer=7
 -----------------------------------------------recharge
 when "0100"=> --recharge
 comp_hold<=comp;
-
+if conversion_timer<=0 then
+state<="0101";
+end if;
 timer_reset<='0';
 SW10K1<='0';
 SW10K2<='0';
 if timer="0011" then
-if conversion_timer<=0 then
-state<="0101";
-end if;
 timer_reset<='1';
 state<="0011";
 end if;
