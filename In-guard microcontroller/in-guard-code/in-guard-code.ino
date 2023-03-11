@@ -123,17 +123,23 @@ int read_run5(){
   int reading=read_cpld(0b00000101);
   return reading;
   }
-double conversion(long testcount,int rpd1){
+double conversion(long testcount,int rpd1,int rpd3,int rpd4,int rpd5){
   double reading;
-  double cal=-4.360596600000;
-  double samplecount=10*10000000.0;
-  reading=(10/cal)*((10*((7*testcount)-rpd1)/samplecount));
+  double cal=-4.535252390244;
+  double samplecount=1*10000000.0;
+  reading=(10/cal)*((10*((10*testcount)-rpd1+(rpd3/8.2)-(rpd4/68)+(rpd5/560))/samplecount));
   return reading;
   }
-double raw_conversion(long testcount,int rpd1){
+double raw_conversion(long testcount,int rpd1,int rpd3,int rpd4,int rpd5){
   double reading;
-  double samplecount=10*10000000.0;
-  reading=((10*((7*testcount)-rpd1)/samplecount));
+  double samplecount=1*10000000.0;
+  reading=((10*((10*testcount)-rpd1+(rpd3/8.2)-(rpd4/68)+(rpd5/560))/samplecount));
+  return reading;
+  }
+double raw_count(long testcount,int rpd1,int rpd3,int rpd4,int rpd5){
+  double reading;
+  double samplecount=1*10000000.0;
+  reading=((((10*testcount)-rpd1+(rpd3/8.2)-(rpd4/68)+(rpd5/560))/samplecount));
   return reading;
   }
 void setup() {
@@ -152,6 +158,7 @@ void loop() {
   
   
   if(digitalRead(data_ready)){
+    /*
     Serial.print("Runup Read: ");
     Serial.println(get_runup_read());
     Serial.print("Rundown 12: ");
@@ -162,12 +169,17 @@ void loop() {
     Serial.println(read_run4());
     Serial.print("Rundown 5: ");
     Serial.println(read_run5());
+    
     Serial.print("Raw Cal: ");
-    Serial.println(raw_conversion(get_runup_read(),read_run12()),12);
+    Serial.println(raw_conversion(get_runup_read(),read_run12(),read_run3(),read_run4(),read_run5()),12);
+    */
+    //Serial.print("Raw Count: ");
+    //Serial.println(raw_count(get_runup_read(),read_run12(),read_run3(),read_run4(),read_run5()),12);
     Serial.print("Reading: ");
-    Serial.println(conversion(get_runup_read(),read_run12()),7);
+    Serial.println(conversion(get_runup_read(),read_run12(),read_run3(),read_run4(),read_run5()),7);
+    //Serial.println("Vdc");
     digitalWrite(conv,HIGH);
-    delay(1);
+    delay(10);
     digitalWrite(conv,LOW);
     }
     
