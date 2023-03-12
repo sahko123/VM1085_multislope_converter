@@ -93,12 +93,13 @@ long get_runup_read(){
   reading=lsb+mlsb+msb;
   if(reading>8388608){
     reading=reading-16777216;}
-  else{}
   return reading;
   
   }
 int read_run12(){
   int reading=read_cpld(0b00000011);
+  if(reading>=128){
+    reading=reading-256;}
   return reading;
   }
 int read_run34(){
