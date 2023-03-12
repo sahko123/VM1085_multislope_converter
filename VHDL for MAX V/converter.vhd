@@ -145,9 +145,9 @@ end if;
 end if;
 
 
-if timer="1010" then --if timer=7
+if timer="1010" then --if timer=10
 
-if conversion_timer<=0 then
+if conversion_timer=0 then
 state<="0101";
 end if;
 
@@ -160,21 +160,29 @@ end if;
 
 timer_reset<='1';
 state<="0100";
-end if; --if timer=7
+end if; --if timer=10
 
 -----------------------------------------------recharge
 when "0100"=> --recharge
-comp_hold<=comp;
-if conversion_timer<=0 then
-state<="0101";
-end if;
+
 timer_reset<='0';
 SW10K1<='0';
 SW10K2<='0';
+comp_hold<=comp;
+--end if;
+----
+if conversion_timer<=10 then
+if timer=std_logic_vector(conversion_timer)(3 downto 0) then
+timer_reset<='1';
+state<="0101";
+end if;
+else
 if timer="0011" then
 timer_reset<='1';
 state<="0011";
 end if;
+end if;
+
 -----------------------------------------------rundown 10k pos
 when "0101"=>
 SW_sample<='0';
