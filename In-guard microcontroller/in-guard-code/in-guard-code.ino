@@ -42,7 +42,7 @@ byte read_cpld(byte address){
   if(bitRead(address,3)==1){digitalWrite(add_3,HIGH);}
   else{digitalWrite(add_3,LOW);}
   //read data
-  delay(1);
+  delay(2);//setup
   bitWrite(data,0,digitalRead(dat_0));
   bitWrite(data,1,digitalRead(dat_1));
   bitWrite(data,2,digitalRead(dat_2));
@@ -74,7 +74,7 @@ void write_cpld(byte address,byte data){
   if(bitRead(address,3)==1){digitalWrite(add_3,HIGH);}
   else{digitalWrite(add_3,LOW);}
   //write data
-  delayMicroseconds(5);
+  delayMicroseconds(10);
   digitalWrite(dat_0,bitRead(data,0));
   digitalWrite(dat_1,bitRead(data,1));
   digitalWrite(dat_2,bitRead(data,2));
@@ -100,10 +100,6 @@ int read_run12(){
   int reading=read_cpld(0b00000011);
   if(reading>=128){
     reading=reading-256;}
-  return reading;
-  }
-int read_run34(){
-  int reading=read_cpld(0b00000100);
   return reading;
   }
 int read_run3(){
@@ -147,7 +143,7 @@ double raw_reading(double run1,float rpd1,float rpd3,float rpd4,float rpd5){
   double reading;
   double samplecount=1*10000000.0;
   double ref=10.0;
-  double gain=ref/0.904550069342;
+  double gain=ref/0.905122706938;
   reading=gain*(((-(run1*10.0)+(rpd1)-(rpd3/4.1)+(rpd4/34.0)-(rpd5/280.0))/(samplecount/2.0)));
   return reading;
   }
