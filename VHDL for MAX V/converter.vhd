@@ -2,6 +2,7 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
+
 entity converter is
 port(
 CLK:in std_logic;
@@ -12,7 +13,7 @@ state_output_0:out std_logic:='0';
 state_output_1:out std_logic:='0';
 COMP,CONV:in std_logic;
 CLK_pass:out std_logic;
-data_ready:out std_logic
+data_ready:out std_logic:='0'
 );
 end entity;
 
@@ -29,6 +30,7 @@ signal timer:std_logic_vector(3 downto 0):=(others=>'0');
 signal timer_reset:std_logic:='0';
 signal comp_hold:std_logic:='0';--flag for comparator input
 signal ready,conving:std_logic;--status flags
+signal st_snapshot:std_logic_vector(3 downto 0);
 
 component counter is
 port(
@@ -45,7 +47,6 @@ time_counter:counter port map(count_out=>timer,CLK=>CLK,RST=>timer_reset);
 
 --control registers
 process(address,CLK) begin
-	--if falling_edge(clk) then
 	case address is
 		when "0000" => data<=std_logic_vector(RP_COUNT(7 downto 0));
 		when "0001" => data<=std_logic_vector(RP_COUNT(15 downto 8));
@@ -60,11 +61,8 @@ process(address,CLK) begin
 		when "1010" => data<=std_logic_vector(conversion_timer(15 downto 8));
 		when "1011" => data<=std_logic_vector(conversion_timer(23 downto 16));
 		when "1100" => data<=std_logic_vector(conversion_timer(31 downto 24));
-		--when others => data<=(others=>'Z');
 		when others => data<="01010101";
-		
 	end case;
-	--end if;
 end process;
 
 
@@ -93,7 +91,6 @@ SW80K3<='0';
 SW640K4<='0';
 SW5120K5<='0';
 ready<='1';
-conversion_timer<=sample_time;
 if CONV='1' then --if conversion triggered
 ready<='0';
 state<="0001";
@@ -119,8 +116,8 @@ SW_input0<='0';
 SW_short<='0';
 timer_reset<='0';
 SW_sample<='1';
-comp_hold<=comp;
 if timer="0111" then
+comp_hold<=comp;
 timer_reset<='1';
 state<="0011";
 end if;
@@ -128,81 +125,65 @@ end if;
 when "0011"=>
 timer_reset<='0';
 
-if comp_hold='0' then
-SW10K2<='1';
-if timer="0100" then
-SW10K1<='1';
-else
-SW10K1<='0';
-end if;
-else
+if comp_hold='1' then--switching with qin comp
 SW10K1<='1';
 if timer="0100" then
 SW10K2<='1';
 else
 SW10K2<='0';
+end if;
+else
+SW10K2<='1';
+if timer="0100" then
+SW10K1<='1';
+else
+SW10K1<='0';
 end if;
 end if;
 
 
 if timer="1010" then --if timer=10
-
-if conversion_timer=0 then
-state<="0101";
-end if;
-
-if comp_hold='0' then
-RP_COUNT<=RP_COUNT-1;
-else
-RP_COUNT<=RP_COUNT+1;
-end if;
-
-
+comp_hold<=comp;
 timer_reset<='1';
 state<="0100";
+
+if comp_hold='1' then--count
+RP_COUNT<=RP_COUNT+1;
+else
+RP_COUNT<=RP_COUNT-1;
+end if;--count
+
 end if; --if timer=10
-
------------------------------------------------recharge
-when "0100"=> --recharge
-
-timer_reset<='0';
+-----------------------------------------------pad
+when "0100"=>
+--timer_reset<='0';
 SW10K1<='0';
 SW10K2<='0';
 comp_hold<=comp;
---end if;
-----
-if conversion_timer<=10 then
-if timer=std_logic_vector(conversion_timer)(3 downto 0) then
-timer_reset<='1';
-state<="0101";
-end if;
-else
-if timer="0011" then
-timer_reset<='1';
+--if timer="0011" then
 state<="0011";
-end if;
-end if;
-
------------------------------------------------rundown 10k pos
+timer_reset<='1';
+--end if;
+-----------------------------------------------rundown 20k pos
 when "0101"=>
 SW_sample<='0';
 SW10K2<='0';
 comp_hold<=comp;
 if comp_hold='1' then
 SW10K1<='1';--positive ramp
-count_stage12<=count_stage12-1;
+count_stage12<=count_stage12+1;
 else
 state<="0110";
 end if;
 
------------------------------------------------rundown 10k neg
+-----------------------------------------------rundown 20k neg
 when "0110"=>--
 SW10K1<='0';
 comp_hold<=comp;
 
 if comp_hold='0' then--negative ramp
 SW10K2<='1';
-count_stage12<=count_stage12+1;
+count_stage12<=count_stage12-1;
 else
 state<="0111";
 end if;
