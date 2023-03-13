@@ -20,7 +20,7 @@ end entity;
 architecture behavioral of converter is
 
 signal conversion_timer:signed(31 downto 0);
-signal sample_time:signed(31 downto 0):=to_signed(10000000,32);
+signal sample_time:signed(31 downto 0):=to_signed(50000000,32);
 signal RP_COUNT:signed(23 downto 0):=(others=>'0');--runup counter
 signal count_stage12:unsigned(7 downto 0):=(others=>'0');--10k rundown
 signal count_stage34:unsigned(7 downto 0):=(others=>'0');--80k pos(4MSB) 640k neg(4LSB)
@@ -142,28 +142,36 @@ end if;
 end if;
 
 
-if timer="1010" then --if timer=10
-comp_hold<=comp;
-timer_reset<='1';
-state<="0100";
+if timer="1010" then
 
-if comp_hold='1' then--count
+if comp_hold='1' then
 RP_COUNT<=RP_COUNT+1;
 else
 RP_COUNT<=RP_COUNT-1;
-end if;--count
+end if;
 
-end if; --if timer=10
+
+timer_reset<='1';
+state<="0100";
+st_snapshot<=std_logic_vector(conversion_timer)(3 downto 0);
+end if;
 -----------------------------------------------pad
 when "0100"=>
---timer_reset<='0';
+timer_reset<='0';
 SW10K1<='0';
 SW10K2<='0';
-comp_hold<=comp;
---if timer="0011" then
+if conversion_timer<=10 then
+if timer=st_snapshot then
+state<="0101";
+timer_reset<='1';
+end if;
+else
+if timer="0001" then
 state<="0011";
 timer_reset<='1';
---end if;
+end if;
+end if;
+
 -----------------------------------------------rundown 20k pos
 when "0101"=>
 SW_sample<='0';
