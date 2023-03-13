@@ -135,16 +135,17 @@ double raw_conversion(long run1,int rpd1,int rpd3,int rpd4,int rpd5){
   }
 double raw_count(long run1,int rpd1,int rpd3,int rpd4,int rpd5){
   double reading;
-  double samplecount=5*10000000.0;
+  double samplecount=1*10000000.0;
   reading=((((run1*10.0)-(rpd1)+(rpd3/4.1)-(rpd4/34.0)+(rpd5/280.0))/(samplecount/2.0)));
   return reading;
   }
 double raw_reading(double run1,float rpd1,float rpd3,float rpd4,float rpd5){
   double reading;
-  double samplecount=5*10000000.0;
+  double samplecount=1*10000000.0;
   double ref=10.0;
-  double gain=ref/-1.333333039617;
-  reading=gain*((((run1*10.0)-(rpd1)+(rpd3/4.1)-(rpd4/34.0)+(rpd5/280.0))/(samplecount/2.0)));
+  double gain=ref/-0.904826900463;
+  //reading=gain*((((run1*10.0)-(rpd1)+(rpd3/4.1)-(rpd4/34.0)+(rpd5/280.0))/(samplecount/2.0)));
+  reading=gain*((((run1*10.0)-(rpd1))/(samplecount/2.0)));
   return reading;
   }
 void test_func(){
@@ -179,14 +180,14 @@ void loop() {
   
   
   if(digitalRead(data_ready)){
-    //test_func();
-    Serial.print("Raw Count: ");
-    Serial.println(raw_count(get_runup_read(),read_run12(),read_run3(),read_run4(),read_run5()),12);
-    Serial.print("Reading: ");
+    test_func();
+    //Serial.print("Raw Count: ");
+    //Serial.println(raw_count(get_runup_read(),read_run12(),read_run3(),read_run4(),read_run5()),12);
+    //Serial.print("Reading: ");
     Serial.println(raw_reading(get_runup_read(),read_run12(),read_run3(),read_run4(),read_run5()),7);
     //Serial.println("Vdc");
     digitalWrite(conv,HIGH);
-    delay(10);
+    delay(2);
     digitalWrite(conv,LOW);
     }
     
