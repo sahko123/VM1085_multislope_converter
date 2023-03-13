@@ -51,16 +51,18 @@ process(address,CLK) begin
 		when "0000" => data<=std_logic_vector(RP_COUNT(7 downto 0));
 		when "0001" => data<=std_logic_vector(RP_COUNT(15 downto 8));
 		when "0010" => data<=std_logic_vector(RP_COUNT(23 downto 16));
-		when "0011" => data<=std_logic_vector(count_stage12);
-		when "0100" => data<=std_logic_vector(count_stage34);
-		when "0101" => data<=std_logic_vector(count_stage5);
-		when "0110" => data<="01010101";
-		when "0111" => data(3 downto 0)<=timer;data(7 downto 4)<=(others=>'0');
-		when "1000" => data(3 downto 0)<=state;data(7 downto 4)<=(others=>'0');
-		when "1001" => data<=std_logic_vector(conversion_timer(7 downto 0));
-		when "1010" => data<=std_logic_vector(conversion_timer(15 downto 8));
-		when "1011" => data<=std_logic_vector(conversion_timer(23 downto 16));
-		when "1100" => data<=std_logic_vector(conversion_timer(31 downto 24));
+		when "0011" => data<=std_logic_vector(count_stage1);
+		when "0100" => data<=std_logic_vector(count_stage2);
+		when "0101" => data<=std_logic_vector(count_stage3);
+		when "0110" => data<=std_logic_vector(count_stage4);
+		when "0111" => data<=std_logic_vector(count_stage5);
+		when "1000" => data<="01010101";
+		when "1001" => data(3 downto 0)<=timer;data(7 downto 4)<=(others=>'0');
+		when "1010" => data(3 downto 0)<=state;data(7 downto 4)<=(others=>'0');
+		when "1011" => data<=std_logic_vector(conversion_timer(7 downto 0));
+		when "1100" => data<=std_logic_vector(conversion_timer(15 downto 8));
+		when "1101" => data<=std_logic_vector(conversion_timer(23 downto 16));
+		when "1110" => data<=std_logic_vector(conversion_timer(31 downto 24));
 		when others => data<="01010101";
 	end case;
 end process;
@@ -197,7 +199,7 @@ SW10K2<='0';
 comp_hold<=comp;
 if comp_hold='1' then
 SW10K1<='1';--positive ramp
-count_stage12<=count_stage12+1;
+count_stage1<=count_stage1+1;
 else
 state<="0110";
 end if;
@@ -209,7 +211,7 @@ comp_hold<=comp;
 
 if comp_hold='0' then--negative ramp
 SW10K2<='1';
-count_stage12<=count_stage12-1;
+count_stage2<=count_stage2+1;
 else
 state<="0111";
 end if;
@@ -221,7 +223,7 @@ comp_hold<=comp;
 
 if comp_hold='1' then
 SW80K3<='1';--positive ramp
-count_stage34<=count_stage34+"00010000";
+count_stage3<=count_stage3+1;
 else
 state<="1000";
 end if;
@@ -233,7 +235,7 @@ comp_hold<=comp;
 
 if comp_hold='0' then
 SW640K4<='1';--positive ramp
-count_stage34<=count_stage34+"00000001";
+count_stage4<=count_stage4+1;
 else
 state<="1001";
 end if;

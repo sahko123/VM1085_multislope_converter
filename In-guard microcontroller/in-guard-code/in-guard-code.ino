@@ -17,7 +17,7 @@ int conv=12;
 int data_ready=13;
 
 byte read_id(){
-  byte out=read_cpld(0b00000110);
+  byte out=read_cpld(0b00001000);
   return out;
   }
   
@@ -42,7 +42,7 @@ byte read_cpld(byte address){
   if(bitRead(address,3)==1){digitalWrite(add_3,HIGH);}
   else{digitalWrite(add_3,LOW);}
   //read data
-  delay(2);//setup
+  delay(1);//setup
   bitWrite(data,0,digitalRead(dat_0));
   bitWrite(data,1,digitalRead(dat_1));
   bitWrite(data,2,digitalRead(dat_2));
@@ -74,7 +74,7 @@ void write_cpld(byte address,byte data){
   if(bitRead(address,3)==1){digitalWrite(add_3,HIGH);}
   else{digitalWrite(add_3,LOW);}
   //write data
-  delayMicroseconds(10);
+  delayMicroseconds(1);
   digitalWrite(dat_0,bitRead(data,0));
   digitalWrite(dat_1,bitRead(data,1));
   digitalWrite(dat_2,bitRead(data,2));
@@ -96,41 +96,24 @@ long get_runup_read(){
   return reading;
   
   }
-int read_run12(){
+int read_run1(){
   int reading=read_cpld(0b00000011);
-  if(reading>=128){
-    reading=reading-256;}
   return reading;
-  }
+}
+int read_run2(){
+  int reading=read_cpld(0b00000100);
+  return reading;
+}
 int read_run3(){
-  byte temp=read_cpld(0b00000100);
-  int reading;
-  temp=temp & 0b00001111;
-  reading=temp;
+  int reading==read_cpld(0b00000101);
   return reading;
 }
 int read_run4(){
-  byte temp=read_cpld(0b00000100);
-  int reading;
-  temp=(temp & 0b11110000)>>4;
-  reading=temp;
+  int reading==read_cpld(0b00000110);
   return reading;
   } 
 int read_run5(){
-  int reading=read_cpld(0b00000101);
-  return reading;
-  }
-double conversion(long testcount,int rpd1,int rpd3,int rpd4,int rpd5){
-  double reading;
-  double cal=-4.535252390244;
-  double samplecount=1*10000000.0;
-  reading=(10/cal)*((10*((10*testcount)-rpd1+(rpd3/8.2)-(rpd4/68)+(rpd5/560))/samplecount));
-  return reading;
-  }
-double raw_conversion(long run1,int rpd1,int rpd3,int rpd4,int rpd5){
-  double reading;
-  double samplecount=1*10000000.0;
-  reading=((10*((10*run1)-rpd1+(rpd3/8.2)-(rpd4/68)+(rpd5/560))/samplecount));
+  int reading=read_cpld(0b00000111);
   return reading;
   }
 double raw_count(long run1,int rpd1,int rpd3,int rpd4,int rpd5){
