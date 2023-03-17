@@ -16,6 +16,13 @@ int dat_7=11;
 int conv=12;
 int data_ready=13;
 
+double stime=.2;
+double clk=10000000;
+double samplecount=clk*stime;
+double ref=10.0;
+double zerocal=0.002848296128;
+double gain=ref/-0.496376827664;
+
 byte read_id(){
   byte out=read_cpld(0b00001000);
   return out;
@@ -42,7 +49,7 @@ byte read_cpld(byte address){
   if(bitRead(address,3)==1){digitalWrite(add_3,HIGH);}
   else{digitalWrite(add_3,LOW);}
   //read data
-  delay(1);//setup
+  delay(2);//setup
   bitWrite(data,0,digitalRead(dat_0));
   bitWrite(data,1,digitalRead(dat_1));
   bitWrite(data,2,digitalRead(dat_2));
@@ -94,26 +101,25 @@ long get_runup_read(){
   if(reading>8388608){
     reading=reading-16777216;}
   return reading;
-  
   }
-int read_run1(){
-  int reading=read_cpld(0b00000011);
+float read_run1(){
+  float reading=read_cpld(0b00000011);
   return reading;
 }
-int read_run2(){
-  int reading=read_cpld(0b00000100);
+float read_run2(){
+  float reading=read_cpld(0b00000100);
   return reading;
 }
-int read_run3(){
-  int reading==read_cpld(0b00000101);
+float read_run3(){
+  float reading=read_cpld(0b00000101);
   return reading;
 }
-int read_run4(){
-  int reading==read_cpld(0b00000110);
+float read_run4(){
+  float reading=read_cpld(0b00000110);
   return reading;
   } 
-int read_run5(){
-  int reading=read_cpld(0b00000111);
+float read_run5(){
+  float reading=read_cpld(0b00000111);
   return reading;
   }
 double raw_count(long run1,int rpd1,int rpd3,int rpd4,int rpd5){
@@ -122,30 +128,28 @@ double raw_count(long run1,int rpd1,int rpd3,int rpd4,int rpd5){
   reading=((((run1*10.0)-(rpd1)+(rpd3/4.1)-(rpd4/34.0)+(rpd5/280.0))/(samplecount/2.0)));
   return reading;
   }
-double raw_reading(double run1,float rpd1,float rpd3,float rpd4,float rpd5){
-  double reading;
-  double samplecount=1*10000000.0;
-  double ref=10.0;
-  double gain=ref/-0.904826900463;
-  //reading=gain*((((run1*10.0)-(rpd1)+(rpd3/4.1)-(rpd4/34.0)+(rpd5/280.0))/(samplecount/2.0)));
-  reading=gain*((((run1*10.0)-(rpd1))/(samplecount/2.0)));
+double raw_reading(double stime){
+  double reading=((((10.0*get_runup_read())+(read_run1())-(read_run2())+(read_run3()/4.1)-(read_run4()/38.0)+(read_run5()/260)))/samplecount);
+  return reading;
+  }
+double reading(double stime){
+  double reading=gain*(((((10.0*get_runup_read())+(read_run1()/10.0)-(read_run2())+(read_run3()/41.0)-(read_run4()/380.0)+(read_run5()/2600.0)))/samplecount)-zerocal);
   return reading;
   }
 void test_func(){
-  Serial.print("Runup Read: ");
+    Serial.print("Runup Read: ");
     Serial.println(get_runup_read());
-    Serial.print("Rundown 12: ");
-    Serial.println(read_run12());
+    Serial.print("Rundown 1: ");
+    Serial.println(read_run1());
+    Serial.print("Rundown 2: ");
+    Serial.println(read_run2());
     Serial.print("Rundown 3: ");
     Serial.println(read_run3());
     Serial.print("Rundown 4: ");
     Serial.println(read_run4());
     Serial.print("Rundown 5: ");
     Serial.println(read_run5());
-    Serial.print("Raw Count: ");
-    Serial.println(raw_count(get_runup_read(),read_run12(),read_run3(),read_run4(),read_run5()),12);
-    //Serial.print("Raw Cal: ");
-    //Serial.println(raw_conversion(get_runup_read(),read_run12(),read_run3(),read_run4(),read_run5()),12);
+    
   }
 void setup() {
   Serial.begin(115200);
@@ -163,14 +167,15 @@ void loop() {
   
   
   if(digitalRead(data_ready)){
-    test_func();
+    //test_func();
     //Serial.print("Raw Count: ");
-    //Serial.println(raw_count(get_runup_read(),read_run12(),read_run3(),read_run4(),read_run5()),12);
+    //Serial.println(raw_reading(stime),12);
     //Serial.print("Reading: ");
-    Serial.println(raw_reading(get_runup_read(),read_run12(),read_run3(),read_run4(),read_run5()),7);
+    Serial.println(reading(stime),7);
     //Serial.println("Vdc");
+    delay(1);
     digitalWrite(conv,HIGH);
-    delay(2);
+    delay(1);
     digitalWrite(conv,LOW);
     }
     
