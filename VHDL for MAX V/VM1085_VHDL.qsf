@@ -62,7 +62,6 @@ set_global_assignment -name VHDL_FILE ../bit8_register.vhd
 set_global_assignment -name VHDL_FILE ../VM1085_VHDL.vhd
 set_global_assignment -name VHDL_FILE converter.vhd
 set_global_assignment -name VHDL_FILE counter.vhd
-set_location_assignment PIN_H5 -to CLK
 set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to SW_short
 set_location_assignment PIN_P2 -to address[0]
 set_location_assignment PIN_M4 -to address[1]
@@ -88,7 +87,7 @@ set_location_assignment PIN_E2 -to SW640K4
 set_location_assignment PIN_P4 -to state_output_0
 set_location_assignment PIN_R1 -to state_output_1
 set_location_assignment PIN_H1 -to CLK_pass
-set_global_assignment -name TIMING_ANALYZER_MULTICORNER_ANALYSIS OFF
+set_global_assignment -name TIMING_ANALYZER_MULTICORNER_ANALYSIS ON
 set_global_assignment -name SMART_RECOMPILE ON
 set_location_assignment PIN_K3 -to data_ready
 set_location_assignment PIN_C3 -to SW_input0
@@ -100,5 +99,16 @@ set_global_assignment -name ROUTER_EFFORT_MULTIPLIER 5
 set_global_assignment -name OPTIMIZE_POWER_DURING_FITTING OFF
 set_global_assignment -name ECO_OPTIMIZE_TIMING ON
 set_global_assignment -name FITTER_AGGRESSIVE_ROUTABILITY_OPTIMIZATION ALWAYS
-set_global_assignment -name PHYSICAL_SYNTHESIS_EFFORT EXTRA
+set_global_assignment -name PHYSICAL_SYNTHESIS_EFFORT NORMAL
 set_global_assignment -name ALM_REGISTER_PACKING_EFFORT HIGH
+set_global_assignment -name OPTIMIZE_HOLD_TIMING "ALL PATHS"
+set_global_assignment -name MAXII_OPTIMIZATION_TECHNIQUE SPEED
+set_global_assignment -name PHYSICAL_SYNTHESIS_COMBO_LOGIC ON
+set_global_assignment -name PHYSICAL_SYNTHESIS_REGISTER_DUPLICATION ON
+set_global_assignment -name PHYSICAL_SYNTHESIS_REGISTER_RETIMING ON
+set_global_assignment -name ROUTER_LCELL_INSERTION_AND_LOGIC_DUPLICATION ON
+set_global_assignment -name ROUTER_TIMING_OPTIMIZATION_LEVEL MAXIMUM
+set_global_assignment -name OPTIMIZE_MULTI_CORNER_TIMING ON
+set_instance_assignment -name GLOBAL_SIGNAL GLOBAL_CLOCK -to CLK
+set_global_assignment -name ADV_NETLIST_OPT_SYNTH_WYSIWYG_REMAP ON
+set_global_assignment -name PHYSICAL_SYNTHESIS_ASYNCHRONOUS_SIGNAL_PIPELINING ON

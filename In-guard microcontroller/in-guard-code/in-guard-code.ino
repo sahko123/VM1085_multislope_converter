@@ -16,12 +16,13 @@ int dat_7=11;
 int conv=12;
 int data_ready=13;
 
-double stime=.2;
+double stime=1;
 double clk=10000000;
 double samplecount=clk*stime;
 double ref=10.0;
-double zerocal=0.002848296128;
-double gain=ref/-0.496376827664;
+double zerocal=0;
+double gain=ref/-0.551309426020
+;
 
 byte read_id(){
   byte out=read_cpld(0b00001000);
@@ -49,7 +50,7 @@ byte read_cpld(byte address){
   if(bitRead(address,3)==1){digitalWrite(add_3,HIGH);}
   else{digitalWrite(add_3,LOW);}
   //read data
-  delay(2);//setup
+  delayMicroseconds(10);//setup
   bitWrite(data,0,digitalRead(dat_0));
   bitWrite(data,1,digitalRead(dat_1));
   bitWrite(data,2,digitalRead(dat_2));
@@ -122,18 +123,13 @@ float read_run5(){
   float reading=read_cpld(0b00000111);
   return reading;
   }
-double raw_count(long run1,int rpd1,int rpd3,int rpd4,int rpd5){
-  double reading;
-  double samplecount=1*10000000.0;
-  reading=((((run1*10.0)-(rpd1)+(rpd3/4.1)-(rpd4/34.0)+(rpd5/280.0))/(samplecount/2.0)));
-  return reading;
-  }
 double raw_reading(double stime){
   double reading=((((10.0*get_runup_read())+(read_run1())-(read_run2())+(read_run3()/4.1)-(read_run4()/38.0)+(read_run5()/260)))/samplecount);
   return reading;
   }
 double reading(double stime){
-  double reading=gain*(((((10.0*get_runup_read())+(read_run1()/10.0)-(read_run2())+(read_run3()/41.0)-(read_run4()/380.0)+(read_run5()/2600.0)))/samplecount)-zerocal);
+  //
+  double reading=gain*(((( (10.0*get_runup_read())+(read_run1()/10.0)-(read_run2()/10.0)+(read_run3()/41.0)-(read_run4()/380.0)+(read_run5()/2600.0) ))/samplecount)-zerocal);
   return reading;
   }
 void test_func(){
@@ -173,9 +169,9 @@ void loop() {
     //Serial.print("Reading: ");
     Serial.println(reading(stime),7);
     //Serial.println("Vdc");
-    delay(1);
+    delayMicroseconds(500);
     digitalWrite(conv,HIGH);
-    delay(1);
+    delayMicroseconds(100);
     digitalWrite(conv,LOW);
     }
     
