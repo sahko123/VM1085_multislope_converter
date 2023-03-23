@@ -154,7 +154,7 @@ void adc_gain(){
   delay(500);
   double reading=samplecount/(((10.0*get_runup_read())+(read_run1())-(read_run2())+(read_run3()/4.1)-(read_run4()/38.0)+(read_run5()/260.0) ));
   set_relay(zero,false);
-  set_relay(ref_input,true);
+  set_relay(ref_input,false);
   gain=reading;
   }
 void adc_vref(){
@@ -175,7 +175,6 @@ void adc_zero(){
   delay(500);
   double reading=gain*(((( (10.0*get_runup_read())+(read_run1())-(read_run2())+(read_run3()/4.1)-(read_run4()/38.0)+(read_run5()/260.0) ))/samplecount));
   zerocal=reading;
-  set_relay(zero,true);
   }
 void ext_zero(){
   set_relay(zero,true);
@@ -190,13 +189,13 @@ void ext_zero(){
   }
 
 double reading(double stime){
-  double reading=(vref*gain)*(((( (10.0*get_runup_read())+(read_run1())-(read_run2())+(read_run3()/4.1)-(read_run4()/38.0)+(read_run5()/260.0) ))/samplecount))-ext_zerocal;
+  double reading=(vref*gain*(((( (10.0*get_runup_read())+(read_run1())-(read_run2())+(read_run3()/4.1)-(read_run4()/38.0)+(read_run5()/260.0) ))/samplecount)))-ext_zerocal;
   return reading;
   }
 void start_conversion(){
-  delayMicroseconds(500);
+  delayMicroseconds(800);
   digitalWrite(conv,HIGH);
-  delayMicroseconds(100);
+  delayMicroseconds(200);
   digitalWrite(conv,LOW);
   }
 void test_func(){
@@ -261,7 +260,7 @@ void loop() {
     
   if(!digitalRead(data_ready)){
     //Serial.println("Conving");
-    //delay(10);
+    //delay(1);
     }
 
   
