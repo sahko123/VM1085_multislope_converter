@@ -32,7 +32,7 @@ signal state:std_logic_vector(3 downto 0);
 signal timer:unsigned(3 downto 0);
 signal compMeta,compStab:std_logic:='0';
 signal comp_hold:std_logic;--flag for comparator input
-signal ready,conving:std_logic;--status flags
+signal conving:std_logic;--status flags
 signal conv_sync:std_logic:='0';
 
 begin
@@ -102,7 +102,6 @@ count_stage4<=(others=>'0');
 count_stage5<=(others=>'0');
 data_ready<='0';
 conving<='1';
-ready<='0';
 timer<=to_unsigned(0,4);
 conversion_timer<=sample_time;
 state<="0001";
@@ -110,8 +109,7 @@ end if;
 -----------------------------------------------pause before conversion
 when "0001"=>
 conversion_timer<=conversion_timer-1;
-SW_short<='1';
-if timer=5 then
+if timer=10 then
 state<="0010";
 timer<=to_unsigned(0,4);
 end if;
@@ -129,6 +127,7 @@ end if;
 -----------------------------------------------runup
 when "0011"=>
 conversion_timer<=conversion_timer-1;
+
 if comp_hold='1' then--switching with qin comp
 SW10K1<='1';
 if timer="0100" then
@@ -145,18 +144,24 @@ SW10K1<='0';
 end if;
 end if;
 
+
+
+if timer=10 then
+
 if conversion_timer<=0 then
 SW_sample<='0';
+SW10K1<='0';
+SW10K2<='0';
 state<="0101";
 timer<=to_unsigned(0,4);
 end if;
 
-if timer=10 then
 if comp_hold='1' then
 RP_COUNT<=RP_COUNT+1;
 else
 RP_COUNT<=RP_COUNT-1;
 end if;
+
 SW10K2<='0';
 SW10K1<='0';
 timer<=to_unsigned(0,4);
@@ -165,30 +170,33 @@ end if;
 -----------------------------------------------pad
 when "0100"=>
 conversion_timer<=conversion_timer-1;
-if timer=2 then
 timer<=to_unsigned(0,4);
 if conversion_timer<=0 then
+SW10K1<='0';
+SW10K2<='0';
 SW_sample<='0';
 state<="0101";
 else
 state<="0011";
 comp_hold<=compStab;
 end if;
-end if;
 -----------------------------------------------rundown 20k pos
 when "0101"=>
-SW10K1<='1';--positive ramp
 comp_hold<=compStab;
 if comp_hold='1' then
+SW10K1<='1';--positive ramp
+SW10K2<='0';
 count_stage1<=count_stage1+1;
 else
 SW10K1<='0';
+SW10K2<='0';
 state<="0110";
 end if;
 
 -----------------------------------------------rundown 20k neg
 when "0110"=>
 SW10K2<='1';
+SW10K1<='0';
 comp_hold<=compStab;
 if comp_hold='0' then--negative ramp
 count_stage2<=count_stage2+1;
