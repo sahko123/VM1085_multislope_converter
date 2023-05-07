@@ -24,7 +24,7 @@ double clk=10000000;
 double samplecount=clk*stime;
 double vref=10.0169870399;
 double zerocal=0.0;
-double ext_zerocal=-0.0554799688;
+double ext_zerocal=0;
 double gain=-1.8098457364;
 
 int running_average=0;
@@ -191,9 +191,9 @@ double reading(double stime){
   return reading;
   }
 void start_conversion(){
-  delayMicroseconds(800);
+  delay(10);
   digitalWrite(conv,HIGH);
-  delayMicroseconds(200);
+  delay(10);
   digitalWrite(conv,LOW);
   }
 void test_func(){
@@ -229,7 +229,6 @@ void setup() {
   adc_zero();
   //ext_zero();
   adc_vref();
-  
   set_relay(zero,true);
   set_relay(ref_input,true);
 }
@@ -259,6 +258,7 @@ void loop() {
     Serial.println(ext_zerocal,10);
     test_func();
     //Serial.println("Vdc");
+    delay(100);
     start_conversion();
     }
     
