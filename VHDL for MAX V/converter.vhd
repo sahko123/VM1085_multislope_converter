@@ -34,6 +34,7 @@ signal compMeta,compStab:std_logic:='0';
 signal comp_hold:std_logic;--flag for comparator input
 signal conving:std_logic;--status flags
 signal conv_sync:std_logic:='0';
+signal OVFerror:std_logic_vector(7 downto 0):=(others=>'0');
 
 begin
 
@@ -42,7 +43,7 @@ state_output_1<=not conving;
 CLK_pass<=CLK;
 
 --control registers
-process(address,CLK,RP_COUNT,count_stage1,count_stage2,count_stage3,count_stage4,count_stage5,timer,state,sample_time) begin
+process(address,CLK,RP_COUNT,count_stage1,count_stage2,count_stage3,count_stage4,count_stage5,timer,state,sample_time,OVFerror) begin
 	case address is
 		when "0000" => data<=std_logic_vector(RP_COUNT(7 downto 0));
 		when "0001" => data<=std_logic_vector(RP_COUNT(15 downto 8));
@@ -56,7 +57,7 @@ process(address,CLK,RP_COUNT,count_stage1,count_stage2,count_stage3,count_stage4
 		when "1001" => data<="01010101";
 		when "1010" => data(3 downto 0)<=std_logic_vector(timer);data(7 downto 4)<=(others=>'0');
 		when "1011" => data(3 downto 0)<=state;data(7 downto 4)<=(others=>'0');
-		when "1100" => data<="01010101";
+		when "1100" => data<=OVFerror;
 		when "1101" => data<="01010101";
 		when "1110" => data<="01010101";
 		when "1111" => data<="01010101";
@@ -76,7 +77,7 @@ end process;
 --conversion process
 process(CLK,conv_sync) begin
 if rising_edge(CLK) then
-conversion_timer<=conversion_timer-1;
+conversion_timer<=conversion_timer+1;
 timer<=timer+1;
 
 case state is
@@ -103,7 +104,7 @@ count_stage4<=(others=>'0');
 count_stage5<=(others=>'0');
 timer<=(others=>'0');
 state<="0010";
-conversion_timer<=sample_time;
+conversion_timer<=(others=>'0');
 end if;
 -----------------------------------------------pause before conversion
 when "0001"=>
@@ -117,18 +118,16 @@ when "0010"=>
 SW_input0<='0';
 SW_short<='0';
 SW_sample<='1';
-if timer=7 then
-comp_hold<=compStab;
+if timer=10 then
+comp_hold<=comp;
 timer<=(others=>'0');
 state<="0011";
 end if;
 -----------------------------------------------runup
 when "0011"=>
-
 if comp_hold='1' then
 SW10K1<='1';
 if timer=4 then
-RP_COUNT<=RP_COUNT+1;
 SW10K2<='1';
 else
 SW10K2<='0';
@@ -137,38 +136,47 @@ end if;
 else
 SW10K2<='1';
 if timer=4 then
-RP_COUNT<=RP_COUNT-1;
 SW10K1<='1';
 else
 SW10K1<='0';
 end if;
+
 end if;
 
 
+if timer=9 then
+if comp_hold='1' then
+RP_count<=RP_count+1;
+else
+RP_count<=RP_count-1;
+end if;
+end if;
 
 if timer=10 then
-
 timer<=(others=>'0');
-comp_hold<=compStab;
 state<="0100";
 end if;
 -----------------------------------------------pad
-when "0100"=>
+when "0100"=> 
 SW10K2<='0';
 SW10K1<='0';
-
-if conversion_timer<=0 then
-SW_sample<='0';
-state<="0101";
-end if;
+SW_sample<='1';
 
 if timer=1 then
---comp_hold<=compStab;
+comp_hold<=comp;
 timer<=(others=>'0');
 state<="0011";
+
+if conversion_timer>=sample_time then
+state<="0101";
+end if;
 end if;
 -----------------------------------------------rundown 20k pos
 when "0101"=>
+SW_sample<='0';
+if count_stage1>250 then
+OVFerror(0)<='1';
+end if;
 if compstab='1' then
 SW10K1<='1';--positive ramp
 SW10K2<='0';
@@ -180,6 +188,9 @@ state<="0110";
 end if;
 -----------------------------------------------rundown 20k neg
 when "0110"=>
+if count_stage2>250 then
+OVFerror(1)<='1';
+end if;
 if compstab='0' then--negative ramp
 SW10K1<='0';
 SW10K2<='1';
@@ -191,6 +202,9 @@ state<="0111";
 end if;
 -----------------------------------------------rundown 80k pos
 when "0111"=>
+if count_stage3>250 then
+OVFerror(2)<='1';
+end if;
 SW80K3<='1';--positive ramp
 if compstab='1' then
 count_stage3<=count_stage3+1;
@@ -201,6 +215,9 @@ end if;
 
 -----------------------------------------------rundown 640k neg
 when "1000"=>
+if count_stage4>250 then
+OVFerror(3)<='1';
+end if;
 SW640K4<='1';--positive ramp
 if compstab='0' then
 count_stage4<=count_stage4+1;
@@ -210,6 +227,9 @@ state<="1001";
 end if;
 -----------------------------------------------rundown 5.12M pos
 when "1001"=>
+if count_stage5>250 then
+OVFerror(4)<='1';
+end if;
 SW5120K5<='1';--positive ramp
 if compstab='1' then
 count_stage5<=count_stage5+1;

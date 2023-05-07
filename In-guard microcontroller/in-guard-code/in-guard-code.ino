@@ -113,11 +113,15 @@ void write_cpld(byte address,byte data){
   }
 int32_t get_runup_read(){
   int32_t reading;
-  uint32_t msb=read_cpld(0b00000011)<<24;
-  uint32_t mmsb=read_cpld(0b00000010)<<16;
-  uint32_t mlsb=read_cpld(0b00000001)<<8;
-  uint32_t lsb=read_cpld(0b00000000);
-  reading=lsb + mlsb + mmsb + msb;
+  int32_t byte4;
+  byte4=read_cpld(0b00000011)<<24;
+  int32_t byte3;
+  byte3=read_cpld(0b00000010)<<16;
+  int32_t byte2;
+  byte2=read_cpld(0b00000001)<<8;
+  int32_t byte1;
+  byte1=read_cpld(0b00000000);
+  reading=byte1 + byte2 + byte3 + byte4;
   return reading;
   }
 float read_run1(){
@@ -146,7 +150,7 @@ void adc_gain(){
   delay(500);
   start_conversion();
   delay(500);
-  double reading=samplecount/(((10.0*get_runup_read())+(read_run1())-(read_run2())+(read_run3()/4.1)-(read_run4()/38.0)+(read_run5()/260.0) ));
+  double reading=samplecount/(((10.0*get_runup_read())-(read_run1())+(read_run2())-(read_run3()/4.1)+(read_run4()/38.0)-(read_run5()/260.0) ));
   set_relay(zero,false);
   set_relay(ref_input,false);
   gain=reading;
@@ -157,7 +161,7 @@ void adc_vref(){
   delay(500);
   start_conversion();
   delay(500);
-  double reading=((10-zerocal)*samplecount)/(gain*((10.0*get_runup_read())+(read_run1())-(read_run2())+(read_run3()/4.1)-(read_run4()/38.0)+(read_run5()/260.0) ));
+  double reading=((10-zerocal)*samplecount)/(gain*((10.0*get_runup_read())-(read_run1())+(read_run2())-(read_run3()/4.1)+(read_run4()/38.0)-(read_run5()/260.0) ));
   vref=reading;
   set_relay(zero,false);
   set_relay(ref_input,false);
@@ -167,7 +171,7 @@ void adc_zero(){
   delay(500);
   start_conversion();
   delay(500);
-  double reading=gain*(((( (10.0*get_runup_read())+(read_run1())-(read_run2())+(read_run3()/4.1)-(read_run4()/38.0)+(read_run5()/260.0) ))/samplecount));
+  double reading=gain*(((( (10.0*get_runup_read())-(read_run1())+(read_run2())-(read_run3()/4.1)+(read_run4()/38.0)-(read_run5()/260.0) ))/samplecount));
   zerocal=reading;
   }
 void ext_zero(){
@@ -176,14 +180,14 @@ void ext_zero(){
   delay(500);
   start_conversion();
   delay(500);
-  double reading=gain*(((( (10.0*get_runup_read())+(read_run1())-(read_run2())+(read_run3()/4.1)-(read_run4()/38.0)+(read_run5()/260.0) ))/samplecount));
+  double reading=gain*(((( (10.0*get_runup_read())-(read_run1())+(read_run2())-(read_run3()/4.1)+(read_run4()/38.0)-(read_run5()/260.0) ))/samplecount));
   ext_zerocal=reading;
   set_relay(zero,false);
   set_relay(ref_input,false);
   }
 
 double reading(double stime){
-  double reading=vref*gain*(( (10.0*get_runup_read())+(read_run1())-(read_run2())+(read_run3()/4.1)-(read_run4()/38.0)+(read_run5()/260.0) ))/samplecount;
+  double reading=vref*gain*(( (10.0*get_runup_read())-(read_run1())+(read_run2())-(read_run3()/4.1)+(read_run4()/38.0)-(read_run5()/260.0) ))/samplecount;
   return reading;
   }
 void start_conversion(){
@@ -194,6 +198,7 @@ void start_conversion(){
   }
 void test_func(){
     Serial.print("Runup Read: ");
+    Serial.println(get_runup_read());
     Serial.println(read_cpld(0b00000011));
     Serial.println(read_cpld(0b00000010));
     Serial.println(read_cpld(0b00000001));
@@ -208,7 +213,8 @@ void test_func(){
     Serial.println(read_run4());
     Serial.print("Rundown 5: ");
     Serial.println(read_run5());
-    
+    Serial.print("OVF ERRROR: ");
+    Serial.println(read_cpld(0b00001100));
   }
 void setup() {
   Serial.begin(115200);
