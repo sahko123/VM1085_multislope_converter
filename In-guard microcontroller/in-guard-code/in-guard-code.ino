@@ -47,13 +47,9 @@ void set_relay(int relay,bool setting){
   pinMode(relay,OUTPUT);
   digitalWrite(relay,setting);
   }
-byte read_id(){
-  byte out=read_cpld(0b00001000);
-  return out;
-  }
   
-byte read_cpld(byte address){
-  byte data;
+uint8_t read_cpld(byte address){
+  uint8_t data;
   //set data pinmodes
   pinMode(dat_0,INPUT);
   pinMode(dat_1,INPUT);
@@ -73,7 +69,7 @@ byte read_cpld(byte address){
   if(bitRead(address,3)==1){digitalWrite(add_3,HIGH);}
   else{digitalWrite(add_3,LOW);}
   //read data
-  delayMicroseconds(10);//setup
+  delayMicroseconds(1);//setup
   bitWrite(data,0,digitalRead(dat_0));
   bitWrite(data,1,digitalRead(dat_1));
   bitWrite(data,2,digitalRead(dat_2));
@@ -115,15 +111,13 @@ void write_cpld(byte address,byte data){
   digitalWrite(dat_6,bitRead(data,6));
   digitalWrite(dat_7,bitRead(data,7));
   }
-long get_runup_read(){
-  long reading;
-  int msb=read_cpld(0b00000011)<<24;
-  int mmsb=read_cpld(0b00000010)<<16;
-  int mlsb=read_cpld(0b00000001)<<8;
-  int lsb=read_cpld(0b00000000);
-  reading=lsb+mlsb+mmsb+msb;
-  if(reading>8388608){
-    reading=reading-16777216;}
+int32_t get_runup_read(){
+  int32_t reading;
+  uint32_t msb=read_cpld(0b00000011)<<24;
+  uint32_t mmsb=read_cpld(0b00000010)<<16;
+  uint32_t mlsb=read_cpld(0b00000001)<<8;
+  uint32_t lsb=read_cpld(0b00000000);
+  reading=lsb + mlsb + mmsb + msb;
   return reading;
   }
 float read_run1(){
@@ -163,7 +157,7 @@ void adc_vref(){
   delay(500);
   start_conversion();
   delay(500);
-  double reading=((10+ext_zerocal)*samplecount)/(gain*((10.0*get_runup_read())+(read_run1())-(read_run2())+(read_run3()/4.1)-(read_run4()/38.0)+(read_run5()/260.0) ));
+  double reading=((10-zerocal)*samplecount)/(gain*((10.0*get_runup_read())+(read_run1())-(read_run2())+(read_run3()/4.1)-(read_run4()/38.0)+(read_run5()/260.0) ));
   vref=reading;
   set_relay(zero,false);
   set_relay(ref_input,false);
@@ -189,7 +183,7 @@ void ext_zero(){
   }
 
 double reading(double stime){
-  double reading=(vref*gain*(((( (10.0*get_runup_read())+(read_run1())-(read_run2())+(read_run3()/4.1)-(read_run4()/38.0)+(read_run5()/260.0) ))/samplecount)))-ext_zerocal;
+  double reading=vref*gain*(( (10.0*get_runup_read())+(read_run1())-(read_run2())+(read_run3()/4.1)-(read_run4()/38.0)+(read_run5()/260.0) ))/samplecount;
   return reading;
   }
 void start_conversion(){
@@ -200,7 +194,10 @@ void start_conversion(){
   }
 void test_func(){
     Serial.print("Runup Read: ");
-    Serial.println(get_runup_read());
+    Serial.println(read_cpld(0b00000011));
+    Serial.println(read_cpld(0b00000010));
+    Serial.println(read_cpld(0b00000001));
+    Serial.println(read_cpld(0b00000000));
     Serial.print("Rundown 1: ");
     Serial.println(read_run1());
     Serial.print("Rundown 2: ");
@@ -228,7 +225,7 @@ void setup() {
   adc_vref();
   
   set_relay(zero,true);
-  set_relay(ref_input,false);
+  set_relay(ref_input,true);
 }
 
 void loop() {
@@ -254,6 +251,7 @@ void loop() {
     Serial.print(zerocal,10);
     Serial.print("\t");
     Serial.println(ext_zerocal,10);
+    test_func();
     //Serial.println("Vdc");
     start_conversion();
     }

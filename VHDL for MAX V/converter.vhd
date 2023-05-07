@@ -22,7 +22,7 @@ architecture behavioral of converter is
 
 signal conversion_timer:signed(31 downto 0);
 signal sample_time:signed(31 downto 0):=to_signed(2000000,32);
-signal RP_COUNT:signed(31 downto 0):=(others=>'0');--runup counter
+signal RP_COUNT:signed(31 downto 0);--runup counter
 signal count_stage1:unsigned(7 downto 0):=(others=>'0');--10k rundown
 signal count_stage2:unsigned(7 downto 0):=(others=>'0');--10k rundown
 signal count_stage3:unsigned(7 downto 0):=(others=>'0');--80k pos
@@ -67,8 +67,7 @@ end process;
 --syncro
 process(CLK,COMP) begin
 if rising_edge(CLK) then
-	compMeta<=comp;
-	compStab<=compMeta;
+	compStab<=comp;
 	conv_sync<=conv;
 end if;
 end process;
@@ -77,7 +76,7 @@ end process;
 --conversion process
 process(CLK,conv_sync) begin
 if rising_edge(CLK) then
-
+conversion_timer<=conversion_timer-1;
 timer<=timer+1;
 
 case state is
@@ -94,50 +93,51 @@ SW80K3<='0';
 SW640K4<='0';
 SW5120K5<='0';
 if CONV_sync='1' then --if conversion triggered
+data_ready<='0';
+conving<='1';
 RP_COUNT<=(others=>'0');
 count_stage1<=(others=>'0');
 count_stage2<=(others=>'0');
 count_stage3<=(others=>'0');
 count_stage4<=(others=>'0');
 count_stage5<=(others=>'0');
-data_ready<='0';
-conving<='1';
-timer<=to_unsigned(0,4);
+timer<=(others=>'0');
+state<="0010";
 conversion_timer<=sample_time;
-state<="0001";
 end if;
 -----------------------------------------------pause before conversion
 when "0001"=>
-conversion_timer<=conversion_timer-1;
 if timer=10 then
 state<="0010";
-timer<=to_unsigned(0,4);
+timer<=(others=>'0');
+else
 end if;
 -----------------------------------------------t1 sample
 when "0010"=>
-conversion_timer<=conversion_timer-1;
 SW_input0<='0';
 SW_short<='0';
 SW_sample<='1';
-if timer=10 then
+if timer=7 then
 comp_hold<=compStab;
-timer<=to_unsigned(0,4);
+timer<=(others=>'0');
 state<="0011";
 end if;
 -----------------------------------------------runup
 when "0011"=>
-conversion_timer<=conversion_timer-1;
 
-if comp_hold='1' then--switching with qin comp
+if comp_hold='1' then
 SW10K1<='1';
-if timer="0100" then
+if timer=4 then
+RP_COUNT<=RP_COUNT+1;
 SW10K2<='1';
 else
 SW10K2<='0';
 end if;
+
 else
 SW10K2<='1';
-if timer="0100" then
+if timer=4 then
+RP_COUNT<=RP_COUNT-1;
 SW10K1<='1';
 else
 SW10K1<='0';
@@ -148,42 +148,28 @@ end if;
 
 if timer=10 then
 
-if conversion_timer<=0 then
-SW_sample<='0';
-SW10K1<='0';
-SW10K2<='0';
-state<="0101";
-timer<=to_unsigned(0,4);
-end if;
-
-if comp_hold='1' then
-RP_COUNT<=RP_COUNT+1;
-else
-RP_COUNT<=RP_COUNT-1;
-end if;
-
-SW10K2<='0';
-SW10K1<='0';
-timer<=to_unsigned(0,4);
+timer<=(others=>'0');
+comp_hold<=compStab;
 state<="0100";
 end if;
 -----------------------------------------------pad
 when "0100"=>
-conversion_timer<=conversion_timer-1;
-timer<=to_unsigned(0,4);
-if conversion_timer<=0 then
-SW10K1<='0';
 SW10K2<='0';
+SW10K1<='0';
+
+if conversion_timer<=0 then
 SW_sample<='0';
 state<="0101";
-else
+end if;
+
+if timer=1 then
+--comp_hold<=compStab;
+timer<=(others=>'0');
 state<="0011";
-comp_hold<=compStab;
 end if;
 -----------------------------------------------rundown 20k pos
 when "0101"=>
-comp_hold<=compStab;
-if comp_hold='1' then
+if compstab='1' then
 SW10K1<='1';--positive ramp
 SW10K2<='0';
 count_stage1<=count_stage1+1;
@@ -192,13 +178,11 @@ SW10K1<='0';
 SW10K2<='0';
 state<="0110";
 end if;
-
 -----------------------------------------------rundown 20k neg
 when "0110"=>
-SW10K2<='1';
+if compstab='0' then--negative ramp
 SW10K1<='0';
-comp_hold<=compStab;
-if comp_hold='0' then--negative ramp
+SW10K2<='1';
 count_stage2<=count_stage2+1;
 else
 SW10K1<='0';
@@ -208,8 +192,7 @@ end if;
 -----------------------------------------------rundown 80k pos
 when "0111"=>
 SW80K3<='1';--positive ramp
-if comp_hold='1' then
-comp_hold<=compStab;
+if compstab='1' then
 count_stage3<=count_stage3+1;
 else
 state<="1000";
@@ -219,8 +202,7 @@ end if;
 -----------------------------------------------rundown 640k neg
 when "1000"=>
 SW640K4<='1';--positive ramp
-if comp_hold='0' then
-comp_hold<=compStab;
+if compstab='0' then
 count_stage4<=count_stage4+1;
 else
 SW640K4<='0';
@@ -229,8 +211,7 @@ end if;
 -----------------------------------------------rundown 5.12M pos
 when "1001"=>
 SW5120K5<='1';--positive ramp
-if comp_hold='1' then
-comp_hold<=compStab;
+if compstab='1' then
 count_stage5<=count_stage5+1;
 else
 state<="0000";
